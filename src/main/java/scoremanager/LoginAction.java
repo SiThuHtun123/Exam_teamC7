@@ -2,7 +2,6 @@ package scoremanager;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import tool.Action;
 
 public class LoginAction extends Action {
@@ -26,3 +25,4 @@ public class LoginAction extends Action {
 		req.getRequestDispatcher("login.jsp").forward(req, res);
 	}
 }
+//Pa Pa Ma Ma

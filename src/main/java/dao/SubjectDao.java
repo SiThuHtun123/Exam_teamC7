@@ -11,7 +11,9 @@ import bean.School;
 import bean.Subject;
 
 public class SubjectDao extends Dao {
-
+	/**
+     * 科目コードと学校情報に基づき、科目インスタンスを取得する
+     */
     public Subject get(String cd, School school) throws Exception {
         Subject subject = null;
         Connection connection = getConnection();
@@ -38,18 +40,21 @@ public class SubjectDao extends Dao {
         return subject;
     }
 
-   
+    /**
+     * 指定された学校の全科目リストを取得する
+     */
     public List<Subject> filter(School school) throws Exception {
         List<Subject> list = new ArrayList<>();
         Connection connection = getConnection();
         PreparedStatement statement = null;
 
         try {
-           
+        	// SQL文内のスペースとソート順に注意
             statement = connection.prepareStatement("select * from subject where school_cd=? order by cd asc");
             statement.setString(1, school.getCd());
             ResultSet rSet = statement.executeQuery();
 
+            // 結果セットを処理するプライベート補助メソッドを呼び出す
             list = postFilter(rSet, school);
 
         } catch (Exception e) {
@@ -61,23 +66,26 @@ public class SubjectDao extends Dao {
         return list;
     }
 
-
+    /**
+     * 科目を保存する（存在する場合は更新、存在しない場合は挿入）
+     */
     public boolean save(Subject subject) throws Exception {
         Connection connection = getConnection();
         PreparedStatement statement = null;
         int count = 0;
 
         try {
+        	// 科目が既に存在するか確認
             Subject check = get(subject.getCd(), subject.getSchool());
             if (check == null) {
-
+            	// 存在しない場合はインサートを実行
                 statement = connection.prepareStatement(
                     "insert into subject (cd, name, school_cd) values (?, ?, ?)");
                 statement.setString(1, subject.getCd());
                 statement.setString(2, subject.getName());
                 statement.setString(3, subject.getSchool().getCd());
             } else {
-
+            	// 存在する場合はアップデートを実行
                 statement = connection.prepareStatement(
                     "update subject set name=? where cd=? and school_cd=?");
                 statement.setString(1, subject.getName());
@@ -93,7 +101,10 @@ public class SubjectDao extends Dao {
         }
         return count > 0;
     }
-
+    
+    /**
+     * 科目を削除する
+     */
     public boolean delete(Subject subject) throws Exception {
         Connection connection = getConnection();
         PreparedStatement statement = null;

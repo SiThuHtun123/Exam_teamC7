@@ -3,7 +3,7 @@ package bean;
 import java.io.Serializable;
 
 /**
- * 科目Bean
+ * 科目情報 Bean
  */
 public class Subject implements Serializable {
 
@@ -17,48 +17,48 @@ public class Subject implements Serializable {
 	}
 
 	/**
-	 * 获取科目编号
-	 * @return cd 科目编号
+	 * 科目コードを取得する
+	 * @return cd 科目コード
 	 */
 	public String getCd() {
 		return cd;
 	}
 
-	/**
-	 * 设置科目编号
-	 * @param cd 科目编号
+	/* 
+	 * 科目コードを設定する
+	 * @param cd 科目コード
 	 */
 	public void setCd(String cd) {
 		this.cd = cd;
 	}
 
 	/**
-	 * 获取科目名称
-	 * @return name 科目名称
+	 * 科目名を取得する
+	 * @return name 科目名
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * 设置科目名称
-	 * @param name 科目名称
+	 * 科目名を設定する
+	 * @param name 科目名
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * 获取学校信息
-	 * @return school 学校实例
+	 * 学校情報を取得する
+	 * @return school 学校インスタンス
 	 */
 	public School getSchool() {
 		return school;
 	}
 
 	/**
-	 * 设置学校信息
-	 * @param school 学校实例
+	 * 学校情報を設定する
+	 * @param school 学校インスタンス
 	 */
 	public void setSchool(School school) {
 		this.school = school;

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { margin: 0; background: #0f0f0f; font-family: 'Arial', sans-serif; padding: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .swatch { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .sw { width: 90px; height: 56px; border-radius: 10px; }
+  .label { font-size: 10px; color: rgba(255,255,255,0.5); text-align: center; }
+  .val { font-size: 9px; color: rgba(255,255,255,0.3); font-family: monospace; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="swatch"><div class="sw" style="background:#0f0f0f; border:1px solid rgba(255,255,255,0.15)"></div><div class="label">Page BG</div><div class="val">#0f0f0f</div></div>
+  <div class="swatch"><div class="sw" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07)"></div><div class="label">Card Surface</div><div class="val">rgba(255,255,255,0.02)</div></div>
+  <div class="swatch"><div class="sw" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08)"></div><div class="label">Surface +2</div><div class="val">rgba(255,255,255,0.04)</div></div>
+  <div class="swatch"><div class="sw" style="background:rgba(0,0,0,0.75); border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(6px)"></div><div class="label">Overlay</div><div class="val">rgba(0,0,0,0.75)</div></div>
+  <div class="swatch"><div class="sw" style="border:1px solid rgba(255,255,255,0.07)"></div><div class="label">Border</div><div class="val">rgba(255,255,255,0.07)</div></div>
+  <div class="swatch"><div class="sw" style="border:1px solid rgba(255,255,255,0.1)"></div><div class="label">Border Light</div><div class="val">rgba(255,255,255,0.10)</div></div>
+</body>
+</html>

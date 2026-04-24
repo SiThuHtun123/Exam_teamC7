@@ -11,37 +11,53 @@
 
 	<c:param name="content">
 		<section>
-			<h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">学生情報変更</h2>
-			<form action="StudentUpdateExecute.action" method="get">
-				<div>
-					<label class="mx-auto py-2" for="ent_year">入学年度</label><br>
-					<input class="border border-0 ps-3" type="text" id="ent_year" name="ent_year" value="${ent_year }" readonly />
-				</div>
-				<div class="mx-auto py-2">
-					<label class="mx-auto py-2" for="no">学生番号</label><br>
-					<input class="border border-0 ps-3" type="text" id="no" value="${no }" name="no" readonly />
-				</div>
-				<div class="mx-auto py-2">
-					<label for="name">氏名</label><br>
-					<input class="form-control" type="text" id="name" name="name" value="${name }" required maxlength="30" />
-				</div>
-				<div class="mx-auto py-2">
-					<label for="class_num">クラス</label><br>
-					<select class="form-select" id="class_num" name="class_num">
-						<c:forEach var="num" items="${class_num_set }">
-							<option value="${num }" <c:if test="${num==class_num }">selected</c:if>>${num }</option>
-						</c:forEach>
-					</select>
-				</div>
-				<div class="mx-auto py-2">
-					<label for="is_attend">在学中</label>
-					<input type="checkbox" id="is_attend" name="is_attend" <c:if test="${is_attend }">checked</c:if> />
-				</div>
-				<div class="mx-auto py-2">
-					<input class="btn btn-primary" type="submit" name="login" value="変更"/>
-				</div>
-			</form>
-			<a href="StudentList.action">戻る</a>
+			<h2 class="page-title">学生情報変更</h2>
+			<div style="max-width:480px;">
+				<form action="StudentUpdateExecute.action" method="get">
+
+					<div class="form-group">
+						<label for="ent_year">入学年度</label>
+						<input type="text" id="ent_year" name="ent_year" value="${ent_year }" readonly
+							style="color:rgba(255,255,255,0.3); cursor:not-allowed;" />
+					</div>
+
+					<div class="form-group">
+						<label for="no">学生番号</label>
+						<input type="text" id="no" name="no" value="${no }" readonly
+							style="color:rgba(255,255,255,0.3); cursor:not-allowed;" />
+					</div>
+
+					<div class="form-group">
+						<label for="name">氏名</label>
+						<input type="text" id="name" name="name" value="${name }" required maxlength="30" />
+					</div>
+
+					<div class="form-group">
+						<label for="class_num">クラス</label>
+						<select id="class_num" name="class_num">
+							<c:forEach var="num" items="${class_num_set }">
+								<option value="${num }" <c:if test="${num==class_num }">selected</c:if>>${num }</option>
+							</c:forEach>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:400; color:rgba(255,255,255,0.55);" for="is_attend">
+							<input type="checkbox" id="is_attend" name="is_attend" <c:if test="${is_attend }">checked</c:if>
+								style="width:auto; accent-color:#f95984;" />
+							在学中
+						</label>
+					</div>
+
+					<div style="display:flex; align-items:center; gap:12px; margin-top:24px;">
+						<input class="btn-primary" type="submit" name="login" value="変更" />
+						<a href="StudentList.action" class="btn-secondary" style="display:inline-block;">
+							<i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i>戻る
+						</a>
+					</div>
+
+				</form>
+			</div>
 		</section>
 	</c:param>
 </c:import>

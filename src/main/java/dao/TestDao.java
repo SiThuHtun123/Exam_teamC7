@@ -51,10 +51,10 @@ public class TestDao extends Dao {
 
         try {
 
-            String sql =
-                "select t.* from test t " +
-                "inner join student s on t.student_no = s.no " +
-                "where t.school_cd = ? ";
+        	String sql =
+        		    "select t.*, s.class_num from test t " +   // ⭐ class_num 追加
+        		    "inner join student s on t.student_no = s.no " +
+        		    "where t.school_cd = ? ";
 
             // 条件追加（設計書準拠：空条件対応）
             if (entYear != 0) {
@@ -87,12 +87,12 @@ public class TestDao extends Dao {
             while (rSet.next()) {
                 Test test = new Test();
 
-                test.setStudentNo(rSet.getString("student_no"));
-                test.setSubjectCd(rSet.getString("subject_cd"));
-                test.setSchoolCd(rSet.getString("school_cd"));
-                test.setNo(rSet.getInt("no"));
-                test.setPoint(rSet.getInt("point"));
-                test.setClassNum(rSet.getString("class_num"));
+	                test.setStudentNo(rSet.getString("student_no"));
+	                test.setSubjectCd(rSet.getString("subject_cd"));
+	                test.setSchoolCd(rSet.getString("school_cd"));
+	                test.setNo(rSet.getInt("no"));
+	                test.setPoint(rSet.getInt("point"));
+	                test.setClassNum(rSet.getString("class_num"));
 
                 list.add(test);
             }
@@ -159,7 +159,7 @@ public class TestDao extends Dao {
                 test.setSchoolCd(rSet.getString("school_cd"));
                 test.setNo(rSet.getInt("no"));
                 test.setPoint(rSet.getInt("point"));
-                test.setClassNum(rSet.getString("class_num"));
+                // test.setClassNum(rSet.getString("class_num"));
 
                 list.add(test);
             }
@@ -201,7 +201,7 @@ public class TestDao extends Dao {
                 test.setSchoolCd(rSet.getString("school_cd"));
                 test.setNo(rSet.getInt("no"));
                 test.setPoint(rSet.getInt("point"));
-                test.setClassNum(rSet.getString("class_num"));
+                // test.setClassNum(rSet.getString("class_num"));
             }
 
         } finally {
@@ -220,15 +220,15 @@ public class TestDao extends Dao {
 
         try {
             statement = connection.prepareStatement(
-                "insert into test values (?, ?, ?, ?, ?, ?)"
-            );
+                "insert into test values (?, ?, ?, ?, ?)"
+            );  
 
             statement.setString(1, test.getStudentNo());
             statement.setString(2, test.getSubjectCd());
             statement.setString(3, test.getSchoolCd());
             statement.setInt(4, test.getNo());
             statement.setInt(5, test.getPoint());
-            statement.setString(6, test.getClassNum());
+            // statement.setString(6, test.getClassNum());  // class_num はテストテーブルに存在しません！
 
             return statement.executeUpdate();
 
@@ -244,16 +244,16 @@ public class TestDao extends Dao {
         PreparedStatement statement = null;
 
         try {
-            statement = connection.prepareStatement(
-                "update test set point=?, class_num=? where student_no=? and subject_cd=? and school_cd=? and no=?"
-            );
+        	statement = connection.prepareStatement(
+        		    "update test set point=? where student_no=? and subject_cd=? and school_cd=? and no=?"
+        	);
 
             statement.setInt(1, test.getPoint());
-            statement.setString(2, test.getClassNum());
-            statement.setString(3, test.getStudentNo());
-            statement.setString(4, test.getSubjectCd());
-            statement.setString(5, test.getSchoolCd());
-            statement.setInt(6, test.getNo());
+            // statement.setString(2, test.getClassNum());
+            statement.setString(2, test.getStudentNo());
+            statement.setString(3, test.getSubjectCd());
+            statement.setString(4, test.getSchoolCd());
+            statement.setInt(5, test.getNo());
 
             return statement.executeUpdate();
 

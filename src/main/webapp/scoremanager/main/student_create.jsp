@@ -11,42 +11,52 @@
 
 	<c:param name="content">
 		<section>
-			<h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">学生情報登録</h2>
-			<form action="StudentCreateExecute.action" method="get">
-				<div>
-					<label for="ent_year">入学年度</label>
-					<select class="form-select" id="ent_year" name="ent_year">
-						<option value="0">--------</option>
-						<c:forEach var="year" items="${ent_year_set }">
-							<%-- 現在のyearと選択されていたent_yearが一致していた場合selectedを追記 --%>
-							<option value="${year }" <c:if test="${year==ent_year }">selected</c:if>>${year }</option>
-						</c:forEach>
-					</select>
-				</div>
-				<div class="mt-2 text-warning">${errors.get("1") }</div>
-				<div>
-					<label for="no">学生番号</label><br>
-					<input class="form-control" type="text" id="no" name="no" value="${no }" required maxlength="10" placeholder="学生番号を入力してください" />
-				</div>
-				<div class="mt-2 text-warning">${errors.get("2") }</div>
-				<div>
-					<label for="name">氏名</label><br>
-					<input class="form-control" type="text" id="name" name="name" value="${name }" required maxlength="30" placeholder="氏名を入力してください" />
-				</div>
-				<div class="mx-auto py-2">
-					<label for="class_num">クラス</label>
-					<select class="form-select" id="class_num" name="class_num">
-						<c:forEach var="num" items="${class_num_set }">
-							<%-- 現在のnumと選択されていたclass_numが一致していた場合selectedを追記 --%>
-							<option value="${num }" <c:if test="${num==class_num }">selected</c:if>>${num }</option>
-						</c:forEach>
-					</select>
-				</div>
-				<div class="mx-auto py-2">
-					<button class="btn btn-secondary" id="create-button" name="end">登録して終了</button>
-				</div>
-			</form>
-			<a href="StudentList.action">戻る</a>
+			<h2 class="page-title">学生情報登録</h2>
+			<div style="max-width:480px;">
+				<form action="StudentCreateExecute.action" method="get">
+
+					<div class="form-group">
+						<label for="ent_year">入学年度</label>
+						<select id="ent_year" name="ent_year">
+							<option value="0">--------</option>
+							<c:forEach var="year" items="${ent_year_set }">
+								<option value="${year }" <c:if test="${year==ent_year }">selected</c:if>>${year }</option>
+							</c:forEach>
+						</select>
+						<div style="color:#fbbf24; font-size:13px; margin-top:4px;">${errors.get("1")}</div>
+					</div>
+
+					<div class="form-group">
+						<label for="no">学生番号</label>
+						<input type="text" id="no" name="no" value="${no }" required maxlength="10" placeholder="学生番号を入力してください" />
+						<div style="color:#fbbf24; font-size:13px; margin-top:4px;">${errors.get("2")}</div>
+					</div>
+
+					<div class="form-group">
+						<label for="name">氏名</label>
+						<input type="text" id="name" name="name" value="${name }" required maxlength="30" placeholder="氏名を入力してください" />
+					</div>
+
+					<div class="form-group">
+						<label for="class_num">クラス</label>
+						<select id="class_num" name="class_num">
+							<c:forEach var="num" items="${class_num_set }">
+								<option value="${num }" <c:if test="${num==class_num }">selected</c:if>>${num }</option>
+							</c:forEach>
+						</select>
+					</div>
+
+					<div style="display:flex; align-items:center; gap:12px; margin-top:24px;">
+						<button class="btn-primary" id="create-button" name="end">
+							<i class="fa-solid fa-check" style="margin-right:6px;"></i>登録して終了
+						</button>
+						<a href="StudentList.action" class="btn-secondary" style="display:inline-block;">
+							<i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i>戻る
+						</a>
+					</div>
+
+				</form>
+			</div>
 		</section>
 	</c:param>
 </c:import>

@@ -2,12 +2,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
-<div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-	<h1 class="fs-1">得点管理システム</h1>
+<div class="header-logo">
+	<div class="header-logo-icon">
+		<i class="fa-solid fa-graduation-cap"></i>
+	</div>
+	<span class="header-logo-text">得点管理システム</span>
 </div>
 <c:if test="${user.isAuthenticated()}">
-	<div class="nav align-self-end">
-		<span class="nav-item px-2">${user.getName()}様</span>
-		<a class="nav-item px-2" href="Logout.action">ログアウト</a>
+	<div class="header-user">
+		<span class="header-username">
+			<i class="fa-solid fa-user"></i>${user.getName()}様
+		</span>
+		<a href="Logout.action" class="header-logout">
+			<i class="fa-solid fa-right-from-bracket"></i>ログアウト
+		</a>
 	</div>
 </c:if>

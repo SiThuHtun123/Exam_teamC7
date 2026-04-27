@@ -9,10 +9,15 @@
 
 	<c:param name="content">
 		<div id="wrap_box">
-			<h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2">ログアウト</h2>
-			<div id="wrap_box">
-				<p class="text-center" style="background-color:#66CC99">ログアウトしました</p>
-				<a href="../Login.action">ログイン</a>
+			<h2 class="page-title">ログアウト</h2>
+			<div style="max-width:480px;">
+				<div style="background:rgba(167,139,250,0.08); border:1px solid rgba(167,139,250,0.25); color:#a78bfa; border-radius:10px; padding:12px 16px; margin-bottom:24px; display:flex; align-items:center; gap:10px; font-size:15px;">
+					<i class="fa-solid fa-right-from-bracket" style="font-size:18px;"></i>
+					ログアウトしました
+				</div>
+				<a href="../Login.action" class="btn-primary" style="display:inline-block;">
+					<i class="fa-solid fa-right-to-bracket" style="margin-right:6px;"></i>ログイン
+				</a>
 			</div>
 		</div>
 	</c:param>

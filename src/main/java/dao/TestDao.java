@@ -51,21 +51,20 @@ public class TestDao extends Dao {
 
         try {
 
-            String sql =
-                "select t.* from test t " +
-                "inner join student s on t.student_no = s.no " +
-                "where t.school_cd = ? ";
+        	String sql =
+        		    "select t.* from test t " +
+        		    "inner join student s on t.student_no = s.no " +
+        		    "where t.school_cd = ? ";
 
-            // 条件追加（設計書準拠：空条件対応）
-            if (entYear != 0) {
-                sql += "and s.ent_year = ? ";
-            }
-            if (classNum != null && !classNum.isEmpty()) {
-                sql += "and s.class_num = ? ";
-            }
-            if (subjectId != null && !subjectId.isEmpty()) {
-                sql += "and t.subject_cd = ? ";
-            }
+        		if (entYear != 0) {
+        		    sql += "and s.ent_year = ? ";
+        		}
+        		if (classNum != null && !classNum.isEmpty()) {
+        		    sql += "and t.class_num = ? ";
+        		}
+        		if (subjectId != null && !subjectId.isEmpty()) {
+        		    sql += "and t.subject_cd = ? ";
+        		}
 
             statement = connection.prepareStatement(sql);
 

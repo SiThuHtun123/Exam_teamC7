@@ -9,11 +9,13 @@
 	</c:param>
 
 	<c:param name="content">
-		<section class="me-4">
-			<h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">科目管理</h2>
-			
-			<div class="my-2 text-end px-4">
-				<a href="SubjectCreate.action">新規登録</a>
+		<section>
+			<h2 class="page-title">科目管理</h2>
+
+			<div style="text-align:right; margin-bottom:16px;">
+				<a href="SubjectCreate.action" class="btn-primary" style="display:inline-block;">
+					<i class="fa-solid fa-plus" style="margin-right:6px;"></i>新規登録
+				</a>
 			</div>
 
 			<c:choose>

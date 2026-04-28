@@ -122,6 +122,6 @@ public class TestRegistAction extends Action {
         req.setAttribute("no_set", noSet);
 
         // 成績登録画面にフォワード
-        req.getRequestDispatcher("test_regist.jsp").forward(req, res);
+        req.getRequestDispatcher("/scoremanager/main/test_regist.jsp").forward(req, res);
     }
 }

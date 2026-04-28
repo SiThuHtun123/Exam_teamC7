@@ -17,7 +17,7 @@ public class TestDao extends Dao {
      */
     public boolean save(Test test) throws Exception {
 
-        // 既存データ確認
+        // 既存データを確認する
         Test old = get(
             test.getStudentNo(),
             test.getSubjectCd(),
@@ -28,10 +28,10 @@ public class TestDao extends Dao {
         int count = 0;
 
         if (old == null) {
-            // 新規登録
+            // 既存データがない場合は新規登録
             count = insert(test);
         } else {
-            // 更新
+            // 既存データがある場合は更新
             count = update(test);
         }
 
@@ -40,6 +40,7 @@ public class TestDao extends Dao {
 
     /**
      * 条件検索
+     * studentテーブルとJOINして氏名・入学年度・クラス番号も取得する
      */
     public List<Test> filter(School school, int entYear, String classNum, String subjectId) throws Exception {
 
@@ -50,25 +51,31 @@ public class TestDao extends Dao {
         ResultSet rSet = null;
 
         try {
+            // studentテーブルとJOINして氏名・入学年度・クラス番号を取得
+            String sql =
+                "select t.*, s.class_num, s.name, s.ent_year from test t " +
+                "inner join student s on t.student_no = s.no " +
+                "where t.school_cd = ? ";
 
-        	String sql =
-        		    "select t.*, s.class_num from test t " +   // ⭐ class_num 追加
-        		    "inner join student s on t.student_no = s.no " +
-        		    "where t.school_cd = ? ";
-
-            // 条件追加（設計書準拠：空条件対応）
+            // 入学年度条件を追加
             if (entYear != 0) {
                 sql += "and s.ent_year = ? ";
             }
+            // クラス番号条件を追加
             if (classNum != null && !classNum.isEmpty()) {
                 sql += "and s.class_num = ? ";
             }
+            // 科目コード条件を追加
             if (subjectId != null && !subjectId.isEmpty()) {
                 sql += "and t.subject_cd = ? ";
             }
 
+            // 学生番号の昇順で並び替え
+            sql += "order by s.no asc ";
+
             statement = connection.prepareStatement(sql);
 
+            // パラメータをバインドする
             int idx = 1;
             statement.setString(idx++, school.getCd());
 
@@ -84,15 +91,19 @@ public class TestDao extends Dao {
 
             rSet = statement.executeQuery();
 
+            // 結果セットをTestインスタンスに変換してリストに追加
             while (rSet.next()) {
                 Test test = new Test();
 
-	                test.setStudentNo(rSet.getString("student_no"));
-	                test.setSubjectCd(rSet.getString("subject_cd"));
-	                test.setSchoolCd(rSet.getString("school_cd"));
-	                test.setNo(rSet.getInt("no"));
-	                test.setPoint(rSet.getInt("point"));
-	                test.setClassNum(rSet.getString("class_num"));
+                test.setStudentNo(rSet.getString("student_no"));
+                test.setSubjectCd(rSet.getString("subject_cd"));
+                test.setSchoolCd(rSet.getString("school_cd"));
+                test.setNo(rSet.getInt("no"));
+                test.setPoint(rSet.getInt("point"));
+                test.setClassNum(rSet.getString("class_num"));
+                // 表示用フィールドをセット
+                test.setStudentName(rSet.getString("name"));
+                test.setEntYear(rSet.getInt("ent_year"));
 
                 list.add(test);
             }
@@ -131,9 +142,8 @@ public class TestDao extends Dao {
     }
 
     /**
-     * 以下はあなたの既存コード（変更なし）
+     * 学校コードで成績一覧を取得する
      */
-
     public List<Test> getList(String schoolCd) throws Exception {
 
         List<Test> list = new ArrayList<>();
@@ -159,7 +169,7 @@ public class TestDao extends Dao {
                 test.setSchoolCd(rSet.getString("school_cd"));
                 test.setNo(rSet.getInt("no"));
                 test.setPoint(rSet.getInt("point"));
-                // test.setClassNum(rSet.getString("class_num"));
+                // class_numはtestテーブルに存在しないためセットしない
 
                 list.add(test);
             }
@@ -173,6 +183,9 @@ public class TestDao extends Dao {
         return list;
     }
 
+    /**
+     * 主キーで成績を1件取得する
+     */
     public Test get(String studentNo, String subjectCd, String schoolCd, int no) throws Exception {
 
         Test test = null;
@@ -201,7 +214,7 @@ public class TestDao extends Dao {
                 test.setSchoolCd(rSet.getString("school_cd"));
                 test.setNo(rSet.getInt("no"));
                 test.setPoint(rSet.getInt("point"));
-                // test.setClassNum(rSet.getString("class_num"));
+                // class_numはtestテーブルに存在しないためセットしない
             }
 
         } finally {
@@ -213,22 +226,26 @@ public class TestDao extends Dao {
         return test;
     }
 
+    /**
+     * 成績を新規登録する
+     */
     public int insert(Test test) throws Exception {
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
 
         try {
+            // testテーブルのカラムは5つ（student_no, subject_cd, school_cd, no, point）
             statement = connection.prepareStatement(
                 "insert into test values (?, ?, ?, ?, ?)"
-            );  
+            );
 
             statement.setString(1, test.getStudentNo());
             statement.setString(2, test.getSubjectCd());
             statement.setString(3, test.getSchoolCd());
             statement.setInt(4, test.getNo());
             statement.setInt(5, test.getPoint());
-            // statement.setString(6, test.getClassNum());  // class_num はテストテーブルに存在しません！
+            // class_numはtestテーブルに存在しないためセットしない
 
             return statement.executeUpdate();
 
@@ -238,18 +255,20 @@ public class TestDao extends Dao {
         }
     }
 
+    /**
+     * 成績を更新する（点数のみ更新）
+     */
     public int update(Test test) throws Exception {
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
 
         try {
-        	statement = connection.prepareStatement(
-        		    "update test set point=? where student_no=? and subject_cd=? and school_cd=? and no=?"
-        	);
+            statement = connection.prepareStatement(
+                "update test set point=? where student_no=? and subject_cd=? and school_cd=? and no=?"
+            );
 
             statement.setInt(1, test.getPoint());
-            // statement.setString(2, test.getClassNum());
             statement.setString(2, test.getStudentNo());
             statement.setString(3, test.getSubjectCd());
             statement.setString(4, test.getSchoolCd());
@@ -263,6 +282,9 @@ public class TestDao extends Dao {
         }
     }
 
+    /**
+     * 成績を削除する
+     */
     public int delete(String studentNo, String subjectCd, String schoolCd, int no) throws Exception {
 
         Connection connection = getConnection();

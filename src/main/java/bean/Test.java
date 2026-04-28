@@ -33,6 +33,20 @@ public class Test implements Serializable {
 	 * クラス番号:String
 	 */
 	private String classNum;
+	
+	
+	/**
+	 * 学生名と入学年度を追加する
+	 */
+	/**
+	 * 学生氏名:String（表示用・studentテーブルからJOINで取得）
+	 */
+	private String studentName;
+ 
+	/**
+	 * 入学年度:int（表示用・studentテーブルからJOINで取得）
+	 */
+	private int entYear;
 
 	/**
 	 * ゲッター・セッター
@@ -83,5 +97,24 @@ public class Test implements Serializable {
 
 	public void setClassNum(String classNum) {
 		this.classNum = classNum;
+	}
+	
+	/**
+	 * 学生名と入学年度を追加する
+	 */
+	public String getStudentName() {
+		return studentName;
+	}
+ 
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+ 
+	public int getEntYear() {
+		return entYear;
+	}
+ 
+	public void setEntYear(int entYear) {
+		this.entYear = entYear;
 	}
 }

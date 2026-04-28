@@ -57,6 +57,7 @@ public class TestDao extends Dao {
                 "inner join student s on t.student_no = s.no " +
                 "where t.school_cd = ? ";
 
+<<<<<<< HEAD
             // 入学年度条件を追加
             if (entYear != 0) {
                 sql += "and s.ent_year = ? ";
@@ -69,6 +70,26 @@ public class TestDao extends Dao {
             if (subjectId != null && !subjectId.isEmpty()) {
                 sql += "and t.subject_cd = ? ";
             }
+=======
+        	String sql =
+<<<<<<< HEAD
+        		    "select t.* from test t " +
+=======
+        		    "select t.*, s.class_num from test t " +   // ⭐ class_num 追加
+>>>>>>> branch 'master' of https://github.com/SiThuHtun123/Exam_teamC7.git
+        		    "inner join student s on t.student_no = s.no " +
+        		    "where t.school_cd = ? ";
+
+        		if (entYear != 0) {
+        		    sql += "and s.ent_year = ? ";
+        		}
+        		if (classNum != null && !classNum.isEmpty()) {
+        		    sql += "and t.class_num = ? ";
+        		}
+        		if (subjectId != null && !subjectId.isEmpty()) {
+        		    sql += "and t.subject_cd = ? ";
+        		}
+>>>>>>> branch 'master' of https://github.com/SiThuHtun123/Exam_teamC7.git
 
             // 学生番号の昇順で並び替え
             sql += "order by s.no asc ";

@@ -9,16 +9,20 @@
 
 	<c:param name="content">
 		<div id="wrap_box">
-			<h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2">科目情報登録</h2>
-			<div id="wrap_box">
-				<p class="text-center" style="background-color:#8cc3a9">登録が完了しました</p>
-
-				<br>
-				<br>
-				<br>
-				<a href="SubjectCreate.action">戻る</a>
-				<a>　　　　　</a>
-				<a href="SubjectList.action">科目一覧</a>
+			<h2 class="page-title">科目情報登録</h2>
+			<div style="max-width:480px;">
+				<div class="msg-success" style="display:flex; align-items:center; gap:10px; font-size:15px;">
+					<i class="fa-solid fa-circle-check" style="font-size:18px;"></i>
+					登録が完了しました
+				</div>
+				<div style="display:flex; gap:12px; margin-top:24px;">
+					<a href="SubjectCreate.action" class="btn-secondary" style="display:inline-block;">
+						<i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i>戻る
+					</a>
+					<a href="SubjectList.action" class="btn-primary" style="display:inline-block;">
+						<i class="fa-solid fa-users" style="margin-right:6px;"></i>科目一覧
+					</a>
+				</div>
 			</div>
 		</div>
 	</c:param>

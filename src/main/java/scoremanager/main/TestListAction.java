@@ -26,46 +26,52 @@ public class TestListAction extends Action {
             return;
         }
 
-        // 🔥 ★ここが今回の核心修正
+        // school補完
         if (teacher.getSchool() == null || teacher.getSchool().getCd() == null) {
-
-            System.out.println("★ school情報が不完全のため再取得します");
-
             TeacherDao teacherDao = new TeacherDao();
-            Teacher fullTeacher = teacherDao.get(teacher.getId());
-
-            if (fullTeacher == null || fullTeacher.getSchool() == null) {
-                request.getRequestDispatcher("/error.jsp").forward(request, response);
-                return;
-            }
-
-            teacher = fullTeacher;
+            teacher = teacherDao.get(teacher.getId());
             session.setAttribute("user", teacher);
         }
 
         try {
+            // パラメータ取得
             String entYearStr = request.getParameter("f1");
             String classNum = request.getParameter("f2");
             String subjectCd = request.getParameter("f3");
+            String studentNo = request.getParameter("studentNo");
 
-            int entYear = 0;
+            // 🔥 検索されたか判定
+            boolean isSearch =
+                (entYearStr != null && !entYearStr.isEmpty()) ||
+                (classNum != null && !classNum.isEmpty()) ||
+                (subjectCd != null && !subjectCd.isEmpty()) ||
+                (studentNo != null && !studentNo.isEmpty());
 
-            if (entYearStr != null && !entYearStr.isEmpty()) {
-                entYear = Integer.parseInt(entYearStr);
+            if (isSearch) {
+
+                int entYear = 0;
+                if (entYearStr != null && !entYearStr.isEmpty()) {
+                    entYear = Integer.parseInt(entYearStr);
+                }
+
+                TestDao dao = new TestDao();
+
+                List<Test> list =
+                    dao.filter(teacher.getSchool(), entYear, classNum, subjectCd);
+
+                // 学生番号検索がある場合はさらに絞る
+                if (studentNo != null && !studentNo.isEmpty()) {
+                    list.removeIf(t -> !studentNo.equals(t.getStudentNo()));
+                }
+
+                request.setAttribute("list", list);
             }
-
-            TestDao dao = new TestDao();
-
-            List<Test> list =
-                dao.filter(teacher.getSchool(), entYear, classNum, subjectCd);
-
-            request.setAttribute("list", list);
 
             request.getRequestDispatcher("/scoremanager/main/test_list.jsp")
                    .forward(request, response);
 
         } catch (Exception e) {
-            e.printStackTrace(); // ← ★これを必ず見る
+            e.printStackTrace();
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }

@@ -48,7 +48,7 @@
                         </select>
                     </div>
 
-                    <%-- 回目セレクトボックス --%>
+                    <%-- 回数セレクトボックス --%>
                     <div style="flex:1;">
                         <label for="f4-select">回数</label>
                         <select id="f4-select" name="f4">
@@ -73,10 +73,11 @@
             <c:if test="${not empty testList}">
                 <form method="post" action="TestRegistExecute.action">
 
-                    <%-- 科目・クラス・回数をhiddenで送信 --%>
+                    <%-- 科目・クラス・回数・入学年度をhiddenで送信 --%>
                     <input type="hidden" name="subject"   value="${f3}" />
                     <input type="hidden" name="class_num" value="${f2}" />
                     <input type="hidden" name="count"     value="${f4}" />
+                    <input type="hidden" name="ent_year"  value="${f1}" />
 
                     <%-- 科目名と回数を表示する --%>
                     <div style="font-size:14px; margin-bottom:12px; color:rgba(255,255,255,0.7);">
@@ -101,7 +102,7 @@
                                     <td>${test.entYear}</td>
                                     <%-- クラス番号 --%>
                                     <td>${test.classNum}</td>
-                                    <%-- 学生番号をhiddenで送信し、画面にも表示する --%>
+                                    <%-- 学生番号をhiddenで送信し画面にも表示する --%>
                                     <td>
                                         <input type="hidden" name="regist" value="${test.studentNo}" />
                                         ${test.studentNo}
@@ -109,8 +110,8 @@
                                     <%-- 氏名 --%>
                                     <td>${test.studentName}</td>
                                     <%-- 点数入力フィールド --%>
-                                    <%-- 得点が-1の場合は未入力（空欄）として表示する --%>
                                     <td>
+                                        <%-- 得点が-1の場合は未入力（空欄）として表示する --%>
                                         <input
                                             type="text"
                                             name="point_${test.studentNo}"

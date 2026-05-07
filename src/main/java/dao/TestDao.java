@@ -53,7 +53,7 @@ public class TestDao extends Dao {
         try {
             // studentテーブルとJOINして氏名・入学年度・クラス番号を取得
             String sql =
-                "select t.*, s.class_num, s.name, s.ent_year from test t " +
+                "select t.*, s.name, s.ent_year from test t " +
                 "inner join student s on t.student_no = s.no " +
                 "where t.school_cd = ? ";
 
@@ -63,7 +63,7 @@ public class TestDao extends Dao {
             }
             // クラス番号条件を追加
             if (classNum != null && !classNum.isEmpty()) {
-                sql += "and s.class_num = ? ";
+                sql += "and t.class_num = ? ";
             }
             // 科目コード条件を追加
             if (subjectId != null && !subjectId.isEmpty()) {
@@ -169,7 +169,7 @@ public class TestDao extends Dao {
                 test.setSchoolCd(rSet.getString("school_cd"));
                 test.setNo(rSet.getInt("no"));
                 test.setPoint(rSet.getInt("point"));
-                // class_numはtestテーブルに存在しないためセットしない
+                test.setClassNum(rSet.getString("class_num"));
 
                 list.add(test);
             }
@@ -214,7 +214,7 @@ public class TestDao extends Dao {
                 test.setSchoolCd(rSet.getString("school_cd"));
                 test.setNo(rSet.getInt("no"));
                 test.setPoint(rSet.getInt("point"));
-                // class_numはtestテーブルに存在しないためセットしない
+                test.setClassNum(rSet.getString("class_num"));
             }
 
         } finally {
@@ -235,9 +235,9 @@ public class TestDao extends Dao {
         PreparedStatement statement = null;
 
         try {
-            // testテーブルのカラムは5つ（student_no, subject_cd, school_cd, no, point）
+            // testテーブルは6カラム（class_numを含む）
             statement = connection.prepareStatement(
-                "insert into test values (?, ?, ?, ?, ?)"
+                "insert into test values (?, ?, ?, ?, ?, ?)"
             );
 
             statement.setString(1, test.getStudentNo());
@@ -245,7 +245,7 @@ public class TestDao extends Dao {
             statement.setString(3, test.getSchoolCd());
             statement.setInt(4, test.getNo());
             statement.setInt(5, test.getPoint());
-            // class_numはtestテーブルに存在しないためセットしない
+            statement.setString(6, test.getClassNum());
 
             return statement.executeUpdate();
 

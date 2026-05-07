@@ -1,11 +1,17 @@
-//追加コード「学生別成績一覧」
-
 package scoremanager.main;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import bean.School;
+import bean.Student;
+import bean.Subject;
 import bean.Teacher;
 import bean.Test;
+import dao.ClassNumDao;
+import dao.StudentDao;
+import dao.SubjectDao;
 import dao.TeacherDao;
 import dao.TestDao;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,46 +39,92 @@ public class TestListAction extends Action {
             session.setAttribute("user", teacher);
         }
 
-        try {
-            // パラメータ取得
-            String entYearStr = request.getParameter("f1");
-            String classNum = request.getParameter("f2");
-            String subjectCd = request.getParameter("f3");
-            String studentNo = request.getParameter("studentNo");
+        School school = teacher.getSchool();
 
-            // 🔥 検索されたか判定
-            boolean isSearch =
-                (entYearStr != null && !entYearStr.isEmpty()) ||
-                (classNum != null && !classNum.isEmpty()) ||
-                (subjectCd != null && !subjectCd.isEmpty()) ||
-                (studentNo != null && !studentNo.isEmpty());
+        // 入学年度リスト生成
+        int year = LocalDate.now().getYear();
+        List<Integer> entYearSet = new ArrayList<>();
+        for (int i = year - 10; i <= year; i++) {
+            entYearSet.add(i);
+        }
 
-            if (isSearch) {
+        // クラス一覧取得
+        ClassNumDao cDao = new ClassNumDao();
+        List<String> classNumSet = cDao.filter(school);
 
-                int entYear = 0;
-                if (entYearStr != null && !entYearStr.isEmpty()) {
-                    entYear = Integer.parseInt(entYearStr);
-                }
+        // 科目一覧取得
+        SubjectDao sDao = new SubjectDao();
+        List<Subject> subjectSet = sDao.filter(school);
 
-                TestDao dao = new TestDao();
+        // ドロップダウンデータをセット
+        request.setAttribute("ent_year_set", entYearSet);
+        request.setAttribute("class_num_set", classNumSet);
+        request.setAttribute("subject_set", subjectSet);
 
-                List<Test> list =
-                    dao.filter(teacher.getSchool(), entYear, classNum, subjectCd);
+        // パラメータ取得
+        String entYearStr = request.getParameter("f1");
+        String classNum   = request.getParameter("f2");
+        String subjectCd  = request.getParameter("f3");
+        String studentNo  = request.getParameter("studentNo");
+        String searchType = request.getParameter("searchType");
 
-                // 学生番号検索がある場合はさらに絞る
-                if (studentNo != null && !studentNo.isEmpty()) {
-                    list.removeIf(t -> !studentNo.equals(t.getStudentNo()));
-                }
+        // 選択値を画面に保持
+        request.setAttribute("f1", entYearStr);
+        request.setAttribute("f2", classNum);
+        request.setAttribute("f3", subjectCd);
+        request.setAttribute("studentNo", studentNo);
+        request.setAttribute("searchType", searchType);
 
-                request.setAttribute("list", list);
+        TestDao testDao = new TestDao();
+        StudentDao studentDao = new StudentDao();
+
+        // 科目情報検索
+        if ("subject".equals(searchType)) {
+            int entYear = 0;
+            if (entYearStr != null && !entYearStr.isEmpty()) {
+                entYear = Integer.parseInt(entYearStr);
             }
 
-            request.getRequestDispatcher("/scoremanager/main/test_list.jsp")
-                   .forward(request, response);
+            List<Test> tests = testDao.filter(school, entYear, classNum, subjectCd);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            // 科目名を取得
+            if (subjectCd != null && !subjectCd.isEmpty()) {
+                Subject subject = sDao.get(subjectCd, school);
+                request.setAttribute("selectedSubject", subject);
+            }
+
+            // 学生名・入学年度を補完
+            for (Test test : tests) {
+                Student student = studentDao.get(test.getStudentNo());
+                if (student != null) {
+                    test.setStudentName(student.getName());
+                    test.setEntYear(student.getEntYear());
+                }
+            }
+
+            request.setAttribute("subjectTests", tests);
+
+        // 学生情報検索
+        } else if ("student".equals(searchType)) {
+            if (studentNo != null && !studentNo.isEmpty()) {
+                Student student = studentDao.get(studentNo);
+                request.setAttribute("selectedStudent", student);
+
+                List<Test> tests = testDao.filter(school, 0, null, null);
+                tests.removeIf(t -> !studentNo.trim().equals(t.getStudentNo().trim()));
+
+                // 科目名を補完
+                for (Test test : tests) {
+                    Subject subject = sDao.get(test.getSubjectCd(), school);
+                    if (subject != null) {
+                        test.setSubjectName(subject.getName());
+                    }
+                }
+
+                request.setAttribute("studentTests", tests);
+            }
         }
+
+        request.getRequestDispatcher("/scoremanager/main/test_list.jsp").forward(request, response);
     }
 }

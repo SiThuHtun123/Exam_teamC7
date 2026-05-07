@@ -113,8 +113,21 @@ public class Test implements Serializable {
 	public int getEntYear() {
 		return entYear;
 	}
- 
+
 	public void setEntYear(int entYear) {
 		this.entYear = entYear;
+	}
+
+	/**
+	 * 科目名:String（表示用）
+	 */
+	private String subjectName;
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
 }

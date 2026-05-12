@@ -289,6 +289,33 @@ label { color: var(--color-purple) !important; }
   transition: color var(--transition-fast), background var(--transition-fast);
 }
 .nav-sub-item:hover { color: var(--color-text-1); background: rgba(255,255,255,0.03); }
+
+/* Light mode */
+body.light-mode {
+  --color-bg:            #f5f5f5;
+  --color-bg-surface:    rgba(0,0,0,0.03);
+  --color-bg-surface-2:  rgba(0,0,0,0.05);
+  --color-pink:          #e0335a;
+  --color-pink-dim:      rgba(224,51,90,0.08);
+  --color-pink-border:   rgba(224,51,90,0.25);
+  --color-purple:        #7c3aed;
+  --color-blue:          #2563eb;
+  --color-green:         #059669;
+  --color-green-dim:     rgba(5,150,105,0.08);
+  --color-green-border:  rgba(5,150,105,0.25);
+  --color-yellow:        #d97706;
+  --color-border:        rgba(0,0,0,0.1);
+  --color-border-subtle: rgba(0,0,0,0.15);
+  --color-text-1:        #111111;
+  --color-text-2:        rgba(0,0,0,0.75);
+  --color-text-3:        rgba(0,0,0,0.65);
+  --color-text-4:        rgba(0,0,0,0.55);
+  --color-text-5:        rgba(0,0,0,0.45);
+  --color-text-6:        rgba(0,0,0,0.35);
+  --shadow-card-hover:   0 16px 40px rgba(0,0,0,0.12);
+}
+body.light-mode select option { background-color: #ffffff; color: #111111; }
+body.light-mode input::placeholder { color: rgba(0,0,0,0.35); }
 </style>
 <title>${param.title}</title>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -320,5 +347,25 @@ ${param.scripts}
 			<c:import url="/common/footer.jsp" />
 		</footer>
 	</div>
+<script>
+function toggleTheme() {
+  var isLight = document.body.classList.toggle('light-mode');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  updateIcon(isLight);
+}
+function updateIcon(isLight) {
+  var icon = document.getElementById('theme-icon');
+  if (icon) {
+    icon.className = isLight ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+  }
+}
+(function() {
+  var saved = localStorage.getItem('theme');
+  if (saved === 'light') {
+    document.body.classList.add('light-mode');
+    updateIcon(true);
+  }
+})();
+</script>
 </body>
 </html>

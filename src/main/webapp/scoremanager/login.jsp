@@ -33,7 +33,7 @@
 					<div style="width:44px; height:44px; background:rgba(249,89,132,0.1); border:1px solid rgba(249,89,132,0.25); border-radius:12px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
 						<i class="fa-solid fa-graduation-cap" style="color:#f95984; font-size:18px;"></i>
 					</div>
-					<h2 style="font-size:18px; font-weight:700; color:#ffffff; margin:0;">ログイン</h2>
+					<h2 style="font-size:18px; font-weight:700; color:var(--color-text-1); margin:0;">ログイン</h2>
 				</div>
 
 				<form action="LoginExecute.action" method="post">
@@ -66,7 +66,7 @@
 						</div>
 
 						<div style="margin-bottom:16px;">
-							<label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px; color:rgba(255,255,255,0.45); font-weight:400;">
+							<label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px; color:var(--color-text-4); font-weight:400;">
 								<input id="password-display" name="chk_d_ps" type="checkbox" style="width:auto; accent-color:#f95984;" />
 								パスワードを表示
 							</label>

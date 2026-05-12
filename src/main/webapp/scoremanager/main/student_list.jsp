@@ -87,17 +87,17 @@
 									<td style="text-align:center;">
 										<c:choose>
 											<c:when test='${student.isAttend()}'>
-												<span style="color:#34d399;">○</span>
+												<span style="color:#34d399; font-size:18px; font-weight:700;">○</span>
 											</c:when>
 											<c:otherwise>
-												<span style="color:rgba(255,255,255,0.3);">×</span>
+												<span style="color:#f95984; font-size:18px; font-weight:700;">×</span>
 											</c:otherwise>
 										</c:choose>
 									</td>
 									<td>
-										<a href="StudentUpdate.action?no=${student.no}" style="font-size:13px; color:rgba(255,255,255,0.45); border:1px solid rgba(255,255,255,0.1); padding:4px 12px; border-radius:8px; transition:color 0.2s ease, border-color 0.2s ease;"
+										<a href="StudentUpdate.action?no=${student.no}" style="font-size:13px; color:var(--color-text-4); border:1px solid var(--color-border); padding:4px 12px; border-radius:8px; transition:color 0.2s ease, border-color 0.2s ease;"
 										   onmouseover="this.style.color='#f95984'; this.style.borderColor='rgba(249,89,132,0.25)';"
-										   onmouseout="this.style.color='rgba(255,255,255,0.45)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+										   onmouseout="this.style.color='var(--color-text-4)'; this.style.borderColor='var(--color-border)';">
 											変更
 										</a>
 									</td>

@@ -96,7 +96,7 @@ public class TestRegistExecuteAction extends Action {
 
             } catch (NumberFormatException e) {
                 // 数値以外が入力された場合
-                errors.put(studentNo, "点数は数字で入力してください");
+                errors.put(studentNo, "0〜100の範囲で入力してください");
                 shouldSave[i] = false;
             }
         }

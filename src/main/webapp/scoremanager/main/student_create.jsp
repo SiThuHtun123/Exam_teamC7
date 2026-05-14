@@ -20,7 +20,7 @@
 						<select id="ent_year" name="ent_year">
 							<option value="0">--------</option>
 							<c:forEach var="year" items="${ent_year_set }">
-								<option value="${year }" <c:if test="${year==ent_year }">selected</c:if>>${year }</option>
+								<option value="${year }">${year }</option>
 							</c:forEach>
 						</select>
 						<div style="color:#fbbf24; font-size:13px; margin-top:4px;">${errors.get("1")}</div>
@@ -28,21 +28,21 @@
 
 					<div class="form-group">
 						<label for="no">学生番号</label>
-						<input type="text" id="no" name="no" value="${no }" required maxlength="10" placeholder="学生番号を入力してください" />
+						<input type="text" id="no" name="no" required maxlength="10" placeholder="学生番号を入力してください" />
 						<div style="color:#fbbf24; font-size:13px; margin-top:4px;">${errors.get("2")}</div>
 					</div>
 
 					<div class="form-group">
 						<label for="name">氏名</label>
-						<input type="text" id="name" name="name" value="${name }" required maxlength="30" placeholder="氏名を入力してください" />
+						<input type="text" id="name" name="name" required maxlength="30" placeholder="氏名を入力してください" />
 					</div>
 
 					<div class="form-group">
 						<label for="class_num">クラス</label>
 						<select id="class_num" name="class_num">
-						<option value="0">--------</option>
+							<option value="0">--------</option>
 							<c:forEach var="num" items="${class_num_set }">
-								<option value="${num }" <c:if test="${num==class_num }">selected</c:if>>${num }</option>
+								<option value="${num }">${num }</option>
 							</c:forEach>
 						</select>
 					</div>

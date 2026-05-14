@@ -18,7 +18,7 @@
 						<label for="cd">科目コード</label>
 						<%-- 科目代码作为主键，不可修改，设为 readonly --%>
 						<input type="text" id="cd" name="cd" value="${subject.cd}" readonly
-							style="color:rgba(255,255,255,0.3); cursor:not-allowed;" />
+							style="color:var(--color-text-5); cursor:not-allowed;" />
 					</div>
 
 					<div class="form-group">

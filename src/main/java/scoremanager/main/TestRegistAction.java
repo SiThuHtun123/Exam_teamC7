@@ -1,3 +1,5 @@
+//修正20260514
+
 package scoremanager.main;
 
 import java.time.LocalDate;
@@ -33,13 +35,13 @@ public class TestRegistAction extends Action {
 
         // 入学年度を数値に変換（未選択の場合は0）
         int entYear = 0;
-        if (entYearStr != null && !entYearStr.isEmpty()) {
+        if (entYearStr != null && !entYearStr.isEmpty() && !entYearStr.equals("0")) {
             entYear = Integer.parseInt(entYearStr);
         }
 
         // 回数を数値に変換（未選択の場合は0）
         int no = 0;
-        if (noStr != null && !noStr.isEmpty()) {
+        if (noStr != null && !noStr.isEmpty() && !noStr.equals("0")) {
             no = Integer.parseInt(noStr);
         }
 
@@ -47,12 +49,14 @@ public class TestRegistAction extends Action {
         LocalDate now = LocalDate.now();
         int year = now.getYear();
         List<Integer> entYearSet = new ArrayList<>();
+
         for (int i = year - 10; i < year + 1; i++) {
             entYearSet.add(i);
         }
 
         // 回数リストを生成（1〜5回）
         List<Integer> noSet = new ArrayList<>();
+
         for (int i = 1; i <= 5; i++) {
             noSet.add(i);
         }
@@ -65,20 +69,43 @@ public class TestRegistAction extends Action {
         SubjectDao sDao = new SubjectDao();
         req.setAttribute("subject_set", sDao.filter(teacher.getSchool()));
 
-        // 全条件が選択されている場合のみ処理を実行
-        if (entYear != 0
+        // ★修正
+        // 検索ボタン押下判定
+        boolean isSearch =
+                entYearStr != null
+                || classNum != null
+                || subject != null
+                || noStr != null;
+
+        // 未入力チェック
+        boolean hasCondition =
+                entYear != 0
                 && classNum != null && !classNum.isEmpty() && !classNum.equals("0")
                 && subject != null && !subject.isEmpty() && !subject.equals("0")
-                && no != 0) {
+                && no != 0;
+
+        // ★修正
+        // 検索時のみメッセージ表示
+        if (isSearch && !hasCondition) {
+            req.setAttribute("message", "入学年度とクラスと科目と回数を選択してください");
+        }
+
+        // 全条件が選択されている場合のみ処理を実行
+        if (hasCondition) {
 
             // ステップ1: StudentDaoで条件に合う学生一覧を取得する
             StudentDao stuDao = new StudentDao();
+
             List<Student> studentList = stuDao.filter(
-                teacher.getSchool(), entYear, classNum, true
+                teacher.getSchool(),
+                entYear,
+                classNum,
+                true
             );
 
-            // ステップ2: 各学生の既存の得点をTestDaoから取得してTestインスタンスを生成する
+            // ステップ2: 各学生の既存の得点をTestDaoから取得
             TestDao tDao = new TestDao();
+
             List<Test> testList = new ArrayList<>();
 
             for (Student student : studentList) {
@@ -92,16 +119,18 @@ public class TestRegistAction extends Action {
                 );
 
                 if (test == null) {
-                    // 既存の得点がない場合は空のTestインスタンスを生成する
+
+                    // 既存の得点がない場合は空のTestインスタンスを生成
                     test = new Test();
+
                     test.setStudentNo(student.getNo());
                     test.setSubjectCd(subject);
                     test.setSchoolCd(teacher.getSchool().getCd());
                     test.setNo(no);
-                    test.setPoint(-1); // 未入力を表すフラグ（JSPで空欄表示に使用）
+                    test.setPoint(-1);
                 }
 
-                // 表示用に学生情報をTestインスタンスにセットする
+                // 表示用に学生情報をセット
                 test.setStudentName(student.getName());
                 test.setEntYear(student.getEntYear());
                 test.setClassNum(student.getClassNum());
@@ -112,11 +141,12 @@ public class TestRegistAction extends Action {
             req.setAttribute("testList", testList);
         }
 
-        // 選択値を画面に保持するためリクエストにセット
+        // 選択値を画面に保持
         req.setAttribute("f1", entYear);
         req.setAttribute("f2", classNum);
         req.setAttribute("f3", subject);
         req.setAttribute("f4", no);
+
         req.setAttribute("class_num_set", classList);
         req.setAttribute("ent_year_set", entYearSet);
         req.setAttribute("no_set", noSet);

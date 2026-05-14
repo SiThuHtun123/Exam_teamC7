@@ -1,11 +1,10 @@
+//修正20260514
+
 package scoremanager.main;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
 
 import bean.School;
 import bean.Student;
@@ -47,6 +46,7 @@ public class TestListAction extends Action {
         // 入学年度リスト生成
         int year = LocalDate.now().getYear();
         List<Integer> entYearSet = new ArrayList<>();
+
         for (int i = year - 10; i <= year; i++) {
             entYearSet.add(i);
         }
@@ -83,66 +83,85 @@ public class TestListAction extends Action {
 
         // 科目情報検索
         if ("subject".equals(searchType)) {
-            int entYear = 0;
-            if (entYearStr != null && !entYearStr.isEmpty()) {
-                entYear = Integer.parseInt(entYearStr);
-            }
 
-            List<Test> tests = testDao.filter(school, entYear, classNum, subjectCd);
+            // 未入力チェック
+            if (entYearStr == null || entYearStr.isEmpty()
+                    || classNum == null || classNum.isEmpty()
+                    || subjectCd == null || subjectCd.isEmpty()) {
 
-            // 科目名を取得
-            if (subjectCd != null && !subjectCd.isEmpty()) {
+                request.setAttribute("message", "入学年度とクラスと科目を選択してください");
+
+            } else {
+
+                int entYear = Integer.parseInt(entYearStr);
+
+                List<Test> tests = testDao.filter(school, entYear, classNum, subjectCd);
+
+                // 科目名を取得
                 Subject subject = sDao.get(subjectCd, school);
+
                 request.setAttribute("selectedSubject", subject);
-            }
 
-            // 回数の一覧を収集（ソート済み）
-            TreeSet<Integer> noSet = new TreeSet<>();
-            for (Test test : tests) {
-                noSet.add(test.getNo());
-            }
+                // 学生名・入学年度を補完
+                for (Test test : tests) {
 
-            // 学生ごとにグループ化: studentNo -> (no -> point)
-            // 表示順を保つためLinkedHashMapを使用
-            Map<String, Map<Integer, Integer>> scoreMap = new LinkedHashMap<>();
-            Map<String, Test> studentInfoMap = new LinkedHashMap<>();
+                    Student student = studentDao.get(test.getStudentNo());
 
-            for (Test test : tests) {
-                String sNo = test.getStudentNo();
-                if (!scoreMap.containsKey(sNo)) {
-                    scoreMap.put(sNo, new LinkedHashMap<>());
-                    Student student = studentDao.get(sNo);
                     if (student != null) {
                         test.setStudentName(student.getName());
                         test.setEntYear(student.getEntYear());
                     }
-                    studentInfoMap.put(sNo, test);
                 }
-                scoreMap.get(sNo).put(test.getNo(), test.getPoint());
-            }
 
-            request.setAttribute("scoreMap", scoreMap);
-            request.setAttribute("studentInfoMap", studentInfoMap);
-            request.setAttribute("noSet", noSet);
+                // データなし
+                if (tests.isEmpty()) {
+                    request.setAttribute("message", "学生情報が存在しませんでした");
+                }
+
+                request.setAttribute("subjectTests", tests);
+            }
 
         // 学生情報検索
         } else if ("student".equals(searchType)) {
+
+            // 学生番号が入力されている場合のみ検索
             if (studentNo != null && !studentNo.isEmpty()) {
+
                 Student student = studentDao.get(studentNo);
-                request.setAttribute("selectedStudent", student);
 
-                List<Test> tests = testDao.filter(school, 0, null, null);
-                tests.removeIf(t -> !studentNo.trim().equals(t.getStudentNo().trim()));
+                // 学生が存在しない場合
+                if (student == null) {
 
-                // 科目名を補完
-                for (Test test : tests) {
-                    Subject subject = sDao.get(test.getSubjectCd(), school);
-                    if (subject != null) {
-                        test.setSubjectName(subject.getName());
+                    request.setAttribute("message", "該当する成績情報が存在しませんでした");
+
+                } else {
+
+                    request.setAttribute("selectedStudent", student);
+
+                    List<Test> tests = testDao.filter(school, 0, null, null);
+
+                    tests.removeIf(t -> !studentNo.trim().equals(t.getStudentNo().trim()));
+
+                    // 科目名を補完
+                    for (Test test : tests) {
+
+                        Subject subject = sDao.get(test.getSubjectCd(), school);
+
+                        if (subject != null) {
+                            test.setSubjectName(subject.getName());
+                        }
+                    }
+
+                    // 成績情報が存在しない場合
+                    if (tests.isEmpty()) {
+
+                        request.setAttribute("message", "該当する成績情報が存在しませんでした");
+
+                    } else {
+
+                        request.setAttribute("studentTests", tests);
                     }
                 }
-
-                request.setAttribute("studentTests", tests);
             }
         }
 

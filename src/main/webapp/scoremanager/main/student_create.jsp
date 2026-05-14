@@ -40,6 +40,7 @@
 					<div class="form-group">
 						<label for="class_num">クラス</label>
 						<select id="class_num" name="class_num">
+						<option value="0">--------</option>
 							<c:forEach var="num" items="${class_num_set }">
 								<option value="${num }" <c:if test="${num==class_num }">selected</c:if>>${num }</option>
 							</c:forEach>

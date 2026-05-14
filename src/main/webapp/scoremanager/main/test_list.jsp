@@ -80,38 +80,16 @@
 
             <!-- 科目情報検索結果 -->
             <c:if test="${'subject' == searchType}">
-
                 <c:if test="${not empty selectedSubject}">
                     <div style="font-size:13px; color:var(--color-text-4); margin-bottom:8px;">
                         科目：<span style="color:#60a5fa; font-weight:600;">${selectedSubject.name}</span>
                     </div>
                 </c:if>
-<<<<<<< HEAD
-
-                <!-- メッセージ表示 -->
-                <c:if test="${not empty message}">
-                    <div style="color:var(--color-text-4); font-size:14px; padding:20px 0;">
-                        ${message}
-                    </div>
-                </c:if>
-
-                <c:if test="${empty message}">
-                    <c:choose>
-
-                        <c:when test="${not empty subjectTests}">
-                            <div style="font-size:13px; margin-bottom:12px;">
-                                <span style="color:var(--color-text-4);">検索結果：</span>
-                                <span style="color:#34d399; font-weight:600;">${subjectTests.size()}件</span>
-                            </div>
-
-                            <div style="background:var(--color-bg-surface); border:1px solid var(--color-border); border-radius:12px; overflow:hidden;">
-                                <table>
-=======
                 <c:choose>
-                    <c:when test="${not empty scoreMap}">
+                    <c:when test="${not empty subjectTests}">
                         <div style="font-size:13px; margin-bottom:12px;">
                             <span style="color:var(--color-text-4);">検索結果：</span>
-                            <span style="color:#34d399; font-weight:600;">${scoreMap.size()}件</span>
+                            <span style="color:#34d399; font-weight:600;">${subjectTests.size()}件</span>
                         </div>
                         <div style="background:var(--color-bg-surface); border:1px solid var(--color-border); border-radius:12px; overflow:hidden;">
                             <table>
@@ -120,82 +98,43 @@
                                     <th>クラス</th>
                                     <th>学生番号</th>
                                     <th>氏名</th>
-                                    <c:forEach var="no" items="${noSet}">
-                                        <th>${no}回</th>
-                                    </c:forEach>
+                                    <th>回数</th>
+                                    <th>得点</th>
                                 </tr>
-                                <c:forEach var="entry" items="${scoreMap}">
-                                    <c:set var="info" value="${studentInfoMap[entry.key]}" />
->>>>>>> branch 'master' of https://github.com/SiThuHtun123/Exam_teamC7.git
+                                <c:forEach var="item" items="${subjectTests}">
                                     <tr>
-<<<<<<< HEAD
-                                        <th>入学年度</th>
-                                        <th>クラス</th>
-                                        <th>学生番号</th>
-                                        <th>氏名</th>
-                                        <th>回数</th>
-                                        <th>得点</th>
-=======
-                                        <td>${info.entYear}</td>
-                                        <td>${info.classNum}</td>
-                                        <td>${entry.key}</td>
-                                        <td>${info.studentName}</td>
-                                        <c:forEach var="no" items="${noSet}">
-                                            <c:choose>
-                                                <c:when test="${not empty entry.value[no]}">
-                                                    <td style="color:#34d399; font-weight:600;">${entry.value[no]}</td>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <td style="color:var(--color-text-5);">-</td>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
->>>>>>> branch 'master' of https://github.com/SiThuHtun123/Exam_teamC7.git
+                                        <td>${item.entYear}</td>
+                                        <td>${item.classNum}</td>
+                                        <td>${item.studentNo}</td>
+                                        <td>${item.studentName}</td>
+                                        <td>${item.no}</td>
+                                        <td style="color:#34d399; font-weight:600;">${item.point}</td>
                                     </tr>
-
-                                    <c:forEach var="item" items="${subjectTests}">
-                                        <tr>
-                                            <td>${item.entYear}</td>
-                                            <td>${item.classNum}</td>
-                                            <td>${item.studentNo}</td>
-                                            <td>${item.studentName}</td>
-                                            <td>${item.no}</td>
-                                            <td style="color:#34d399; font-weight:600;">${item.point}</td>
-                                        </tr>
-                                    </c:forEach>
-
-                                </table>
-                            </div>
-                        </c:when>
-
-                        <c:otherwise>
-                            <div style="color:var(--color-text-4); font-size:14px; padding:20px 0;">
-                                該当する成績情報が存在しませんでした。
-                            </div>
-                        </c:otherwise>
-
-                    </c:choose>
-                </c:if>
-
+                                </c:forEach>
+                            </table>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div style="color:var(--color-text-4); font-size:14px; padding:20px 0;">
+                            該当する成績情報が存在しませんでした。
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </c:if>
 
             <!-- 学生情報検索結果 -->
             <c:if test="${'student' == searchType}">
-
                 <c:if test="${not empty selectedStudent}">
                     <div style="font-size:13px; color:var(--color-text-4); margin-bottom:8px;">
                         氏名：<span style="color:#a78bfa; font-weight:600;">${selectedStudent.name} (${studentNo})</span>
                     </div>
                 </c:if>
-
                 <c:choose>
-
                     <c:when test="${not empty studentTests}">
                         <div style="font-size:13px; margin-bottom:12px;">
                             <span style="color:var(--color-text-4);">検索結果：</span>
                             <span style="color:#34d399; font-weight:600;">${studentTests.size()}件</span>
                         </div>
-
                         <div style="background:var(--color-bg-surface); border:1px solid var(--color-border); border-radius:12px; overflow:hidden;">
                             <table>
                                 <tr>
@@ -204,7 +143,6 @@
                                     <th>回数</th>
                                     <th>点数</th>
                                 </tr>
-
                                 <c:forEach var="item" items="${studentTests}">
                                     <tr>
                                         <td>${item.subjectName}</td>
@@ -213,19 +151,15 @@
                                         <td style="color:#34d399; font-weight:600;">${item.point}</td>
                                     </tr>
                                 </c:forEach>
-
                             </table>
                         </div>
                     </c:when>
-
                     <c:otherwise>
                         <div style="color:var(--color-text-4); font-size:14px; padding:20px 0;">
                             該当する成績情報が存在しませんでした。
                         </div>
                     </c:otherwise>
-
                 </c:choose>
-
             </c:if>
 
             <!-- 初期表示メッセージ -->

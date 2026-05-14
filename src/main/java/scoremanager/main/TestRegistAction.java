@@ -65,19 +65,11 @@ public class TestRegistAction extends Action {
         SubjectDao sDao = new SubjectDao();
         req.setAttribute("subject_set", sDao.filter(teacher.getSchool()));
 
-     // 未入力チェック
-        boolean hasCondition =
-                entYear != 0
+        // 全条件が選択されている場合のみ処理を実行
+        if (entYear != 0
                 && classNum != null && !classNum.isEmpty() && !classNum.equals("0")
                 && subject != null && !subject.isEmpty() && !subject.equals("0")
-                && no != 0;
-
-        if (!hasCondition) {
-            req.setAttribute("message", "入学年度とクラスと科目と回数を選択してください");
-        }
-        
-        // 全条件が選択されている場合のみ処理を実行
-        if (hasCondition) {
+                && no != 0) {
 
             // ステップ1: StudentDaoで条件に合う学生一覧を取得する
             StudentDao stuDao = new StudentDao();

@@ -44,6 +44,7 @@ public class TestListAction extends Action {
         // 入学年度リスト生成
         int year = LocalDate.now().getYear();
         List<Integer> entYearSet = new ArrayList<>();
+
         for (int i = year - 10; i <= year; i++) {
             entYearSet.add(i);
         }
@@ -80,42 +81,62 @@ public class TestListAction extends Action {
 
         // 科目情報検索
         if ("subject".equals(searchType)) {
-            int entYear = 0;
-            if (entYearStr != null && !entYearStr.isEmpty()) {
-                entYear = Integer.parseInt(entYearStr);
-            }
 
-            List<Test> tests = testDao.filter(school, entYear, classNum, subjectCd);
+            // 未入力チェック
+            if (entYearStr == null || entYearStr.isEmpty()
+                    || classNum == null || classNum.isEmpty()
+                    || subjectCd == null || subjectCd.isEmpty()) {
 
-            // 科目名を取得
-            if (subjectCd != null && !subjectCd.isEmpty()) {
+                request.setAttribute("message", "入学年度とクラスと科目を選択してください");
+
+            } else {
+
+                int entYear = Integer.parseInt(entYearStr);
+
+                List<Test> tests = testDao.filter(school, entYear, classNum, subjectCd);
+
+                // 科目名を取得
                 Subject subject = sDao.get(subjectCd, school);
+
                 request.setAttribute("selectedSubject", subject);
-            }
 
-            // 学生名・入学年度を補完
-            for (Test test : tests) {
-                Student student = studentDao.get(test.getStudentNo());
-                if (student != null) {
-                    test.setStudentName(student.getName());
-                    test.setEntYear(student.getEntYear());
+                // 学生名・入学年度を補完
+                for (Test test : tests) {
+
+                    Student student = studentDao.get(test.getStudentNo());
+
+                    if (student != null) {
+                        test.setStudentName(student.getName());
+                        test.setEntYear(student.getEntYear());
+                    }
                 }
-            }
 
-            request.setAttribute("subjectTests", tests);
+                // データなし
+                if (tests.isEmpty()) {
+                    request.setAttribute("message", "学生情報が存在しませんでした");
+                }
+
+                request.setAttribute("subjectTests", tests);
+            }
 
         // 学生情報検索
         } else if ("student".equals(searchType)) {
+
             if (studentNo != null && !studentNo.isEmpty()) {
+
                 Student student = studentDao.get(studentNo);
+
                 request.setAttribute("selectedStudent", student);
 
                 List<Test> tests = testDao.filter(school, 0, null, null);
+
                 tests.removeIf(t -> !studentNo.trim().equals(t.getStudentNo().trim()));
 
                 // 科目名を補完
                 for (Test test : tests) {
+
                     Subject subject = sDao.get(test.getSubjectCd(), school);
+
                     if (subject != null) {
                         test.setSubjectName(subject.getName());
                     }

@@ -86,6 +86,7 @@
                         科目：<span style="color:#60a5fa; font-weight:600;">${selectedSubject.name}</span>
                     </div>
                 </c:if>
+<<<<<<< HEAD
 
                 <!-- メッセージ表示 -->
                 <c:if test="${not empty message}">
@@ -105,13 +106,51 @@
 
                             <div style="background:var(--color-bg-surface); border:1px solid var(--color-border); border-radius:12px; overflow:hidden;">
                                 <table>
+=======
+                <c:choose>
+                    <c:when test="${not empty scoreMap}">
+                        <div style="font-size:13px; margin-bottom:12px;">
+                            <span style="color:var(--color-text-4);">検索結果：</span>
+                            <span style="color:#34d399; font-weight:600;">${scoreMap.size()}件</span>
+                        </div>
+                        <div style="background:var(--color-bg-surface); border:1px solid var(--color-border); border-radius:12px; overflow:hidden;">
+                            <table>
+                                <tr>
+                                    <th>入学年度</th>
+                                    <th>クラス</th>
+                                    <th>学生番号</th>
+                                    <th>氏名</th>
+                                    <c:forEach var="no" items="${noSet}">
+                                        <th>${no}回</th>
+                                    </c:forEach>
+                                </tr>
+                                <c:forEach var="entry" items="${scoreMap}">
+                                    <c:set var="info" value="${studentInfoMap[entry.key]}" />
+>>>>>>> branch 'master' of https://github.com/SiThuHtun123/Exam_teamC7.git
                                     <tr>
+<<<<<<< HEAD
                                         <th>入学年度</th>
                                         <th>クラス</th>
                                         <th>学生番号</th>
                                         <th>氏名</th>
                                         <th>回数</th>
                                         <th>得点</th>
+=======
+                                        <td>${info.entYear}</td>
+                                        <td>${info.classNum}</td>
+                                        <td>${entry.key}</td>
+                                        <td>${info.studentName}</td>
+                                        <c:forEach var="no" items="${noSet}">
+                                            <c:choose>
+                                                <c:when test="${not empty entry.value[no]}">
+                                                    <td style="color:#34d399; font-weight:600;">${entry.value[no]}</td>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <td style="color:var(--color-text-5);">-</td>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
+>>>>>>> branch 'master' of https://github.com/SiThuHtun123/Exam_teamC7.git
                                     </tr>
 
                                     <c:forEach var="item" items="${subjectTests}">

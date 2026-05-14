@@ -2,7 +2,10 @@ package scoremanager.main;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 import bean.School;
 import bean.Student;
@@ -98,6 +101,7 @@ public class TestListAction extends Action {
                 Subject subject = sDao.get(subjectCd, school);
                 request.setAttribute("selectedSubject", subject);
 
+<<<<<<< HEAD
                 // 学生名・入学年度を補完
                 for (Test test : tests) {
                     Student student = studentDao.get(test.getStudentNo());
@@ -107,7 +111,15 @@ public class TestListAction extends Action {
                         test.setEntYear(student.getEntYear());
                     }
                 }
+=======
+            // 回数の一覧を収集（ソート済み）
+            TreeSet<Integer> noSet = new TreeSet<>();
+            for (Test test : tests) {
+                noSet.add(test.getNo());
+            }
+>>>>>>> branch 'master' of https://github.com/SiThuHtun123/Exam_teamC7.git
 
+<<<<<<< HEAD
                 // データなし
                 if (tests.isEmpty()) {
                     request.setAttribute("message", "学生情報が存在しませんでした");
@@ -115,6 +127,30 @@ public class TestListAction extends Action {
 
                 request.setAttribute("subjectTests", tests);
             }
+=======
+            // 学生ごとにグループ化: studentNo -> (no -> point)
+            // 表示順を保つためLinkedHashMapを使用
+            Map<String, Map<Integer, Integer>> scoreMap = new LinkedHashMap<>();
+            Map<String, Test> studentInfoMap = new LinkedHashMap<>();
+
+            for (Test test : tests) {
+                String sNo = test.getStudentNo();
+                if (!scoreMap.containsKey(sNo)) {
+                    scoreMap.put(sNo, new LinkedHashMap<>());
+                    Student student = studentDao.get(sNo);
+                    if (student != null) {
+                        test.setStudentName(student.getName());
+                        test.setEntYear(student.getEntYear());
+                    }
+                    studentInfoMap.put(sNo, test);
+                }
+                scoreMap.get(sNo).put(test.getNo(), test.getPoint());
+            }
+
+            request.setAttribute("scoreMap", scoreMap);
+            request.setAttribute("studentInfoMap", studentInfoMap);
+            request.setAttribute("noSet", noSet);
+>>>>>>> branch 'master' of https://github.com/SiThuHtun123/Exam_teamC7.git
 
         // 学生情報検索
         } else if ("student".equals(searchType)) {

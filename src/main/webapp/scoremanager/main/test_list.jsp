@@ -12,7 +12,7 @@
             <!-- 科目情報検索フォーム -->
             <form action="TestList.action" method="get">
                 <input type="hidden" name="searchType" value="subject" />
-                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:16px 20px; margin-bottom:12px;">
+                <div style="background:var(--color-bg-surface); border:1px solid var(--color-border); border-radius:12px; padding:16px 20px; margin-bottom:12px;">
                     <div style="font-size:13px; font-weight:600; color:#60a5fa; margin-bottom:12px;">科目情報</div>
                     <div style="display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap;">
 
@@ -59,7 +59,7 @@
             <!-- 学生情報検索フォーム -->
             <form action="TestList.action" method="get">
                 <input type="hidden" name="searchType" value="student" />
-                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:16px 20px; margin-bottom:20px;">
+                <div style="background:var(--color-bg-surface); border:1px solid var(--color-border); border-radius:12px; padding:16px 20px; margin-bottom:20px;">
                     <div style="font-size:13px; font-weight:600; color:#a78bfa; margin-bottom:12px;">学生情報</div>
                     <div style="display:flex; align-items:flex-end; gap:16px;">
 
@@ -81,41 +81,51 @@
             <!-- 科目情報検索結果 -->
             <c:if test="${'subject' == searchType}">
                 <c:if test="${not empty selectedSubject}">
-                    <div style="font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:8px;">
+                    <div style="font-size:13px; color:var(--color-text-4); margin-bottom:8px;">
                         科目：<span style="color:#60a5fa; font-weight:600;">${selectedSubject.name}</span>
                     </div>
                 </c:if>
                 <c:choose>
-                    <c:when test="${not empty subjectTests}">
+                    <c:when test="${not empty scoreMap}">
                         <div style="font-size:13px; margin-bottom:12px;">
-                            <span style="color:rgba(255,255,255,0.45);">検索結果：</span>
-                            <span style="color:#34d399; font-weight:600;">${subjectTests.size()}件</span>
+                            <span style="color:var(--color-text-4);">検索結果：</span>
+                            <span style="color:#34d399; font-weight:600;">${scoreMap.size()}件</span>
                         </div>
-                        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07); border-radius:12px; overflow:hidden;">
+                        <div style="background:var(--color-bg-surface); border:1px solid var(--color-border); border-radius:12px; overflow:hidden;">
                             <table>
                                 <tr>
                                     <th>入学年度</th>
                                     <th>クラス</th>
                                     <th>学生番号</th>
                                     <th>氏名</th>
-                                    <th>回数</th>
-                                    <th>得点</th>
+                                    <c:forEach var="no" items="${noSet}">
+                                        <th>${no}回</th>
+                                    </c:forEach>
                                 </tr>
-                                <c:forEach var="item" items="${subjectTests}">
+                                <c:forEach var="entry" items="${scoreMap}">
+                                    <c:set var="info" value="${studentInfoMap[entry.key]}" />
                                     <tr>
-                                        <td>${item.entYear}</td>
-                                        <td>${item.classNum}</td>
-                                        <td>${item.studentNo}</td>
-                                        <td>${item.studentName}</td>
-                                        <td>${item.no}</td>
-                                        <td style="color:#34d399; font-weight:600;">${item.point}</td>
+                                        <td>${info.entYear}</td>
+                                        <td>${info.classNum}</td>
+                                        <td>${entry.key}</td>
+                                        <td>${info.studentName}</td>
+                                        <c:forEach var="no" items="${noSet}">
+                                            <c:choose>
+                                                <c:when test="${not empty entry.value[no]}">
+                                                    <td style="color:#34d399; font-weight:600;">${entry.value[no]}</td>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <td style="color:var(--color-text-5);">-</td>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
                                     </tr>
                                 </c:forEach>
                             </table>
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <div style="color:rgba(255,255,255,0.45); font-size:14px; padding:20px 0;">
+                        <div style="color:var(--color-text-4); font-size:14px; padding:20px 0;">
                             該当する成績情報が存在しませんでした。
                         </div>
                     </c:otherwise>
@@ -125,17 +135,17 @@
             <!-- 学生情報検索結果 -->
             <c:if test="${'student' == searchType}">
                 <c:if test="${not empty selectedStudent}">
-                    <div style="font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:8px;">
+                    <div style="font-size:13px; color:var(--color-text-4); margin-bottom:8px;">
                         氏名：<span style="color:#a78bfa; font-weight:600;">${selectedStudent.name} (${studentNo})</span>
                     </div>
                 </c:if>
                 <c:choose>
                     <c:when test="${not empty studentTests}">
                         <div style="font-size:13px; margin-bottom:12px;">
-                            <span style="color:rgba(255,255,255,0.45);">検索結果：</span>
+                            <span style="color:var(--color-text-4);">検索結果：</span>
                             <span style="color:#34d399; font-weight:600;">${studentTests.size()}件</span>
                         </div>
-                        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07); border-radius:12px; overflow:hidden;">
+                        <div style="background:var(--color-bg-surface); border:1px solid var(--color-border); border-radius:12px; overflow:hidden;">
                             <table>
                                 <tr>
                                     <th>科目名</th>
@@ -155,7 +165,7 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <div style="color:rgba(255,255,255,0.45); font-size:14px; padding:20px 0;">
+                        <div style="color:var(--color-text-4); font-size:14px; padding:20px 0;">
                             該当する成績情報が存在しませんでした。
                         </div>
                     </c:otherwise>
@@ -164,7 +174,7 @@
 
             <!-- 初期表示メッセージ -->
             <c:if test="${empty searchType}">
-                <div style="color:rgba(255,255,255,0.45); font-size:13px; padding:12px 0;">
+                <div style="color:var(--color-text-4); font-size:13px; padding:12px 0;">
                     <i class="fa-solid fa-circle-info" style="margin-right:6px; color:#60a5fa;"></i>
                     科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
                 </div>

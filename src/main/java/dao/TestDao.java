@@ -236,9 +236,13 @@ public class TestDao extends Dao {
 
         try {
             // testテーブルは6カラム（class_numを含む）
-            statement = connection.prepareStatement(
-                "insert into test values (?, ?, ?, ?, ?, ?)"
-            );
+        	
+        	//修正2026/05/13
+        	statement = connection.prepareStatement(
+        		    "insert into test " +
+        		    "(student_no, subject_cd, school_cd, no, point, class_num) " +
+        		    "values (?, ?, ?, ?, ?, ?)"
+        		);
 
             statement.setString(1, test.getStudentNo());
             statement.setString(2, test.getSubjectCd());

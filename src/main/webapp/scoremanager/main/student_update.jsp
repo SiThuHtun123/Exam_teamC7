@@ -18,13 +18,13 @@
 					<div class="form-group">
 						<label for="ent_year">入学年度</label>
 						<input type="text" id="ent_year" name="ent_year" value="${ent_year }" readonly
-							style="color:rgba(255,255,255,0.3); cursor:not-allowed;" />
+							style="color:var(--color-text-5); cursor:not-allowed;" />
 					</div>
 
 					<div class="form-group">
 						<label for="no">学生番号</label>
 						<input type="text" id="no" name="no" value="${no }" readonly
-							style="color:rgba(255,255,255,0.3); cursor:not-allowed;" />
+							style="color:var(--color-text-5); cursor:not-allowed;" />
 					</div>
 
 					<div class="form-group">
@@ -42,7 +42,7 @@
 					</div>
 
 					<div class="form-group">
-						<label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:400; color:rgba(255,255,255,0.55);" for="is_attend">
+						<label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:400; color:var(--color-text-3);" for="is_attend">
 							<input type="checkbox" id="is_attend" name="is_attend" <c:if test="${is_attend }">checked</c:if>
 								style="width:auto; accent-color:#f95984;" />
 							在学中

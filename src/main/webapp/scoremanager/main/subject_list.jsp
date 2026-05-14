@@ -25,8 +25,8 @@
 							<tr>
 								<th>科目コード</th>
 								<th>科目名</th>
-								<th></th>
-								<th></th>
+								<th style="width: 80px;"></th> <%-- 固定操作列宽度更整齐 --%>
+								<th style="width: 80px;"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -35,12 +35,18 @@
 									<td>${subject.cd}</td>
 									<td>${subject.name}</td>
 									<td>
-										<%-- 変更リンク --%>
-										<a href="SubjectUpdate.action?cd=${subject.cd}">変更</a>
+										<%-- 修正：变更链接也使用 c:url 处理特殊字符 --%>
+										<c:url var="updateUrl" value="SubjectUpdate.action">
+											<c:param name="cd" value="${subject.cd}" />
+										</c:url>
+										<a href="${updateUrl}">変更</a>
 									</td>
 									<td>
-										<%-- 削除リンク --%>
-										<a href="SubjectDelete.action?cd=${subject.cd}">削除</a>
+										<%-- 削除链接：已正确处理编码 --%>
+										<c:url var="deleteUrl" value="SubjectDelete.action">
+										    <c:param name="cd" value="${subject.cd}" />
+										</c:url>
+										<a href="${deleteUrl}">削除</a>
 									</td>
 								</tr>
 							</c:forEach>

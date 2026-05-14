@@ -1,3 +1,5 @@
+<%-- 修正20260514 --%>
+
 <%-- 成績登録JSP --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -69,6 +71,13 @@
                 </div>
             </form>
 
+            <%-- メッセージ表示 --%>
+            <c:if test="${not empty message}">
+                <div style="color:#f95984; font-size:14px; padding:12px 0;">
+                    ${message}
+                </div>
+            </c:if>
+
             <%-- 成績入力フォーム（検索後に表示） --%>
             <c:if test="${not empty testList}">
                 <form method="post" action="TestRegistExecute.action">
@@ -100,15 +109,19 @@
                                 <tr>
                                     <%-- 入学年度 --%>
                                     <td>${test.entYear}</td>
+
                                     <%-- クラス番号 --%>
                                     <td>${test.classNum}</td>
+
                                     <%-- 学生番号をhiddenで送信し画面にも表示する --%>
                                     <td>
                                         <input type="hidden" name="regist" value="${test.studentNo}" />
                                         ${test.studentNo}
                                     </td>
+
                                     <%-- 氏名 --%>
                                     <td>${test.studentName}</td>
+
                                     <%-- 点数入力フィールド --%>
                                     <td>
                                         <%-- 得点が-1の場合は未入力（空欄）として表示する --%>
@@ -119,6 +132,7 @@
                                             style="width:80px; text-align:center;"
                                             placeholder="0〜100"
                                         />
+
                                         <%-- 該当学生のエラーメッセージをインラインで表示する --%>
                                         <c:if test="${not empty errors[test.studentNo]}">
                                             <div style="color:#f95984; font-size:12px; margin-top:4px;">
@@ -142,7 +156,7 @@
             </c:if>
 
             <%-- 検索結果なし --%>
-            <c:if test="${empty testList and f1 != 0}">
+            <c:if test="${empty testList and empty message and f1 != 0}">
                 <div style="color:rgba(255,255,255,0.45); font-size:14px; padding:20px 0;">
                     <i class="fa-solid fa-inbox" style="margin-right:8px;"></i>
                     該当する成績情報が存在しませんでした。

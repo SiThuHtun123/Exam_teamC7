@@ -11,7 +11,28 @@
 
 	<c:param name="content">
 		<section>
-			<h2 class="page-title">学生情報登録</h2>
+			<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+				<h2 class="page-title" style="margin:0;">学生情報登録</h2>
+				<form id="csvForm" action="StudentCsvUpload.action" method="post" enctype="multipart/form-data">
+					<input type="file" id="csvFile" name="csvFile" accept=".csv" style="display:none;" />
+					<button class="btn-secondary" type="button" onclick="document.getElementById('csvFile').click();">
+						<i class="fa-solid fa-file-csv" style="margin-right:6px;"></i>CSVで登録
+					</button>
+				</form>
+				<script>
+					document.getElementById('csvFile').addEventListener('change', function() {
+						if (this.files.length > 0) document.getElementById('csvForm').submit();
+					});
+				</script>
+			</div>
+			<c:if test="${not empty csvMessage}">
+				<div style="margin-bottom:16px; padding:10px 14px; border-radius:8px; font-size:13px;
+					background:${csvSuccess ? 'rgba(52,211,153,0.1)' : 'rgba(249,89,132,0.1)'};
+					border:1px solid ${csvSuccess ? '#34d399' : '#f95984'};
+					color:${csvSuccess ? '#34d399' : '#f95984'};">
+					<i class="fa-solid ${csvSuccess ? 'fa-circle-check' : 'fa-circle-exclamation'}" style="margin-right:6px;"></i>${csvMessage}
+				</div>
+			</c:if>
 			<div style="max-width:480px;">
 				<form action="StudentCreateExecute.action" method="get">
 

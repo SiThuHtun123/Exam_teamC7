@@ -66,13 +66,36 @@
 			<c:choose>
 				<c:when test="${students.size()>0}">
 					<div style="font-size:13px; margin-bottom:12px;">
-						<span style="color:rgba(255,255,255,0.45);">検索結果：</span><span style="color:#34d399; font-weight:600;">${students.size()}件</span>
+						<span style="color:rgba(255,255,255,0.45);">検索結果：</span><span style="color:#34d399; font-weight:600;">${totalCount}件</span>
 					</div>
 					<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07); border-radius:12px; overflow:hidden;">
 						<table>
+							<c:set var="sortBase" value="StudentList.action?f1=${f1}${not empty f2 and f2 != '0' and f2 != 'null' ? '&f2='.concat(f2) : ''}${not empty f3 and f3 != 'null' ? '&f3=t' : ''}&page=1" />
 							<tr>
-								<th>入学年度</th>
-								<th>学生番号</th>
+								<th>
+									<a href="${sortBase}&sortBy=entYear&sortDir=${sortBy == 'entYear' && sortDir == 'asc' ? 'desc' : 'asc'}"
+									   style="color:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+										入学年度
+										<span style="font-size:10px; opacity:${sortBy == 'entYear' ? '1' : '0.3'};">
+											<c:choose>
+												<c:when test="${sortBy == 'entYear' && sortDir == 'asc'}">&#9650;</c:when>
+												<c:otherwise>&#9660;</c:otherwise>
+											</c:choose>
+										</span>
+									</a>
+								</th>
+								<th>
+									<a href="${sortBase}&sortBy=studentNo&sortDir=${sortBy == 'studentNo' && sortDir == 'asc' ? 'desc' : 'asc'}"
+									   style="color:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+										学生番号
+										<span style="font-size:10px; opacity:${sortBy == 'studentNo' ? '1' : '0.3'};">
+											<c:choose>
+												<c:when test="${sortBy == 'studentNo' && sortDir == 'asc'}">&#9650;</c:when>
+												<c:otherwise>&#9660;</c:otherwise>
+											</c:choose>
+										</span>
+									</a>
+								</th>
 								<th>氏名</th>
 								<th>クラス</th>
 								<th style="text-align:center;">在学中</th>
@@ -105,6 +128,54 @@
 							</c:forEach>
 						</table>
 					</div>
+
+					<!-- ページネーション -->
+					<c:if test="${totalPages > 1}">
+						<c:set var="pageBase" value="StudentList.action?f1=${f1}${not empty f2 and f2 != '0' and f2 != 'null' ? '&f2='.concat(f2) : ''}${not empty f3 and f3 != 'null' ? '&f3=t' : ''}&sortBy=${sortBy}&sortDir=${sortDir}" />
+						<div style="display:flex; justify-content:center; align-items:center; gap:6px; margin-top:16px;">
+
+							<!-- 前へ -->
+							<c:choose>
+								<c:when test="${currentPage > 1}">
+									<a href="${pageBase}&page=${currentPage - 1}"
+									   style="padding:6px 12px; border-radius:8px; border:1px solid var(--color-border); color:var(--color-text-4); font-size:13px; text-decoration:none;">
+										&#8249;
+									</a>
+								</c:when>
+								<c:otherwise>
+									<span style="padding:6px 12px; border-radius:8px; border:1px solid var(--color-border); color:var(--color-text-5); font-size:13px; cursor:not-allowed;">&#8249;</span>
+								</c:otherwise>
+							</c:choose>
+
+							<!-- ページ番号 -->
+							<c:forEach begin="1" end="${totalPages}" var="p">
+								<c:choose>
+									<c:when test="${p == currentPage}">
+										<span style="padding:6px 12px; border-radius:8px; border:1px solid #f95984; background:rgba(249,89,132,0.1); color:#f95984; font-size:13px; font-weight:600;">${p}</span>
+									</c:when>
+									<c:otherwise>
+										<a href="${pageBase}&page=${p}"
+										   style="padding:6px 12px; border-radius:8px; border:1px solid var(--color-border); color:var(--color-text-4); font-size:13px; text-decoration:none;">${p}</a>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+
+							<!-- 次へ -->
+							<c:choose>
+								<c:when test="${currentPage < totalPages}">
+									<a href="${pageBase}&page=${currentPage + 1}"
+									   style="padding:6px 12px; border-radius:8px; border:1px solid var(--color-border); color:var(--color-text-4); font-size:13px; text-decoration:none;">
+										&#8250;
+									</a>
+								</c:when>
+								<c:otherwise>
+									<span style="padding:6px 12px; border-radius:8px; border:1px solid var(--color-border); color:var(--color-text-5); font-size:13px; cursor:not-allowed;">&#8250;</span>
+								</c:otherwise>
+							</c:choose>
+
+						</div>
+					</c:if>
+
 				</c:when>
 				<c:otherwise>
 					<div style="color:rgba(255,255,255,0.45); font-size:14px; padding:20px 0;">

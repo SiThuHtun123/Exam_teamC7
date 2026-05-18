@@ -1,3 +1,5 @@
+//追加修正20260518
+
 //追加部分「クラス管理」
 
 package scoremanager.main;
@@ -13,26 +15,66 @@ import tool.Action;
 
 public class ClassNumListAction extends Action {
 
-    @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+	@Override
+	public void execute(
+			HttpServletRequest request,
+			HttpServletResponse response)
+			throws Exception {
 
-        HttpSession session = request.getSession();
+		// セッション取得
+		HttpSession session =
+			request.getSession(false);
 
-        // ログインユーザー取得
-        Teacher teacher = (Teacher) session.getAttribute("user");
+		// 未ログイン対策
+		if (session == null) {
 
-        // DAO
-        ClassNumDao dao = new ClassNumDao();
+			response.sendRedirect(
+				request.getContextPath()
+				+ "/login.jsp"
+			);
 
-        // クラス一覧取得
-        List<String> list = dao.filter(teacher.getSchool());
+			return;
+		}
 
-        // リクエストへセット
-        request.setAttribute("class_num_set", list);
+		// ログインユーザー取得
+		Teacher teacher =
+			(Teacher) session.getAttribute(
+				"user"
+			);
 
-        // JSPへフォワード
-        request.getRequestDispatcher("scoremanager/main/class_num_list.jsp")
-        .forward(request, response);
-    }
+		// ユーザー未取得
+		if (teacher == null) {
+
+			response.sendRedirect(
+				request.getContextPath()
+				+ "/login.jsp"
+			);
+
+			return;
+		}
+
+		// DAO生成
+		ClassNumDao dao =
+			new ClassNumDao();
+
+		// クラス一覧取得
+		List<String> list =
+			dao.filter(
+				teacher.getSchool()
+			);
+
+		// リクエストへセット
+		request.setAttribute(
+			"class_num_set",
+			list
+		);
+
+		// JSPへフォワード
+		request.getRequestDispatcher(
+			"/scoremanager/main/class_num_list.jsp"
+		).forward(
+			request,
+			response
+		);
+	}
 }

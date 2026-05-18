@@ -44,18 +44,13 @@ public class StudentCreateExecuteAction extends Action {
 				new ArrayList<>();
 
 		// DAO
-		StudentDao dao =
-				new StudentDao();
+		StudentDao dao = new StudentDao();
 
 		// 学生番号重複確認
-		boolean exists =
-				dao.exists(
-						no,
-						school.getCd());
+		Student oldStudent = dao.get(no);
 
-		if (exists) {
-
-			errors.add("学生番号が重複しています");
+		if (oldStudent != null) {
+		    errors.add("学生番号が重複しています");
 		}
 
 		// エラーあり

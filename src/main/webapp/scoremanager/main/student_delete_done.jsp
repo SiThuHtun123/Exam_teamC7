@@ -1,12 +1,23 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%-- 追加作成20260515 --%>
+
+<%@ page contentType="text/html;charset=UTF-8" %>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>学生削除完了</title>
 </head>
+
 <body>
+
+<h2>学生削除完了</h2>
+
+<p>学生番号「${no}」を削除しました。</p>
+
+<br>
+
+<a href="StudentList.action">学生一覧へ</a>
 
 </body>
 </html>

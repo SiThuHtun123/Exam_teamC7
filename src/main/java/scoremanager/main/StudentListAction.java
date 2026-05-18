@@ -4,6 +4,7 @@ package scoremanager.main;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,10 @@ public class StudentListAction extends Action {
 
         // エラー格納
         Map<String, String> errors = new HashMap<>();
+
+        // null文字列を空として扱う
+        if ("null".equals(classNum)) classNum = null;
+        if ("null".equals(isAttendStr)) isAttendStr = null;
 
         // 入学年度変換
         if (entYearStr != null && !entYearStr.isEmpty()) {
@@ -119,12 +124,50 @@ public class StudentListAction extends Action {
             );
         }
 
+        // ソート
+        String sortBy  = request.getParameter("sortBy");
+        String sortDir = request.getParameter("sortDir");
+        if (sortBy == null || sortBy.isEmpty()) sortBy = "entYear";
+        if (sortDir == null || sortDir.isEmpty()) sortDir = "desc";
+
+        Comparator<Student> comparator;
+        if ("studentNo".equals(sortBy)) {
+            comparator = Comparator.comparing(Student::getNo);
+        } else {
+            comparator = Comparator.comparingInt(Student::getEntYear);
+        }
+        if ("desc".equals(sortDir)) comparator = comparator.reversed();
+        students.sort(comparator);
+
+        // ページネーション
+        int pageSize = 10;
+        int totalCount = students.size();
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        String pageStr = request.getParameter("page");
+        int currentPage = 1;
+        if (pageStr != null && !pageStr.isEmpty()) {
+            try { currentPage = Integer.parseInt(pageStr); } catch (NumberFormatException e) {}
+        }
+        if (currentPage < 1) currentPage = 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        int fromIndex = (currentPage - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, totalCount);
+        List<Student> pagedStudents = students.subList(fromIndex, toIndex);
+
         // リクエストスコープへ格納
         request.setAttribute("f1", entYear);
         request.setAttribute("f2", classNum);
         request.setAttribute("f3", isAttendStr);
 
-        request.setAttribute("students", students);
+        request.setAttribute("students", pagedStudents);
+        request.setAttribute("totalCount", totalCount);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("sortBy", sortBy);
+        request.setAttribute("sortDir", sortDir);
         request.setAttribute("class_num_set", list);
         request.setAttribute("ent_year_set", entYearSet);
 

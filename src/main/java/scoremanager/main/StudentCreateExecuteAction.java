@@ -7,6 +7,7 @@ import java.util.List;
 
 import bean.School;
 import bean.Student;
+import bean.Teacher;
 import dao.StudentDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,10 +21,14 @@ public class StudentCreateExecuteAction extends Action {
 			HttpServletResponse response
 	) throws Exception {
 
-		// セッションから学校情報取得
+		// セッションからログインユーザー取得
+		Teacher teacher =
+				(Teacher) request.getSession()
+				.getAttribute("user");
+
+		// 学校情報取得
 		School school =
-				(School) request.getSession()
-				.getAttribute("school");
+				teacher.getSchool();
 
 		// パラメータ取得
 		String no =
@@ -44,13 +49,17 @@ public class StudentCreateExecuteAction extends Action {
 				new ArrayList<>();
 
 		// DAO
-		StudentDao dao = new StudentDao();
+		StudentDao dao =
+				new StudentDao();
 
 		// 学生番号重複確認
-		Student oldStudent = dao.get(no);
+		Student oldStudent =
+				dao.get(no);
 
 		if (oldStudent != null) {
-		    errors.add("学生番号が重複しています");
+
+			errors.add(
+					"学生番号が重複しています");
 		}
 
 		// エラーあり
@@ -62,7 +71,9 @@ public class StudentCreateExecuteAction extends Action {
 
 			request.getRequestDispatcher(
 					"student_create.jsp")
-					.forward(request, response);
+					.forward(
+							request,
+							response);
 
 			return;
 		}
@@ -84,6 +95,8 @@ public class StudentCreateExecuteAction extends Action {
 		// 完了画面
 		request.getRequestDispatcher(
 				"student_create_done.jsp")
-				.forward(request, response);
+				.forward(
+						request,
+						response);
 	}
 }

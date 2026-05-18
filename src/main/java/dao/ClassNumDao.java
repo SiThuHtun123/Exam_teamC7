@@ -1,3 +1,5 @@
+//追加修正20260515
+
 package dao;
 
 import java.sql.Connection;
@@ -277,6 +279,89 @@ public class ClassNumDao extends Dao {
 		    }
 
 		    return count > 0;
+		}
+		
+		/**
+		 * クラス使用確認
+		 * studentテーブルで使用されているか確認
+		 */
+		public boolean isUsed(
+				String class_num,
+				School school) throws Exception {
+
+			// コネクション取得
+			Connection connection = getConnection();
+
+			// ステートメント
+			PreparedStatement statement = null;
+
+			// ResultSet
+			ResultSet rSet = null;
+
+			// 使用フラグ
+			boolean result = false;
+
+			try {
+
+				// SQL
+				statement = connection.prepareStatement(
+					"select count(*) "
+				  + "from student "
+				  + "where class_num=? "
+				  + "and school_cd=?"
+				);
+
+				// パラメータセット
+				statement.setString(1, class_num);
+				statement.setString(2, school.getCd());
+
+				// 実行
+				rSet = statement.executeQuery();
+
+				// 結果取得
+				if (rSet.next()) {
+
+					int count = rSet.getInt(1);
+
+					// 1件以上なら使用中
+					result = count > 0;
+				}
+
+			} catch (Exception e) {
+
+				throw e;
+
+			} finally {
+
+				// ResultSet close
+				if (rSet != null) {
+					try {
+						rSet.close();
+					} catch (SQLException sqle) {
+						throw sqle;
+					}
+				}
+
+				// Statement close
+				if (statement != null) {
+					try {
+						statement.close();
+					} catch (SQLException sqle) {
+						throw sqle;
+					}
+				}
+
+				// Connection close
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException sqle) {
+						throw sqle;
+					}
+				}
+			}
+
+			return result;
 		}
 }
 	

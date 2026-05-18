@@ -1,3 +1,5 @@
+//追加修正20260518
+
 // 追加「クラス管理」
 
 package scoremanager.main;

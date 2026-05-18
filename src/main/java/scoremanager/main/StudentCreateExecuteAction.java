@@ -1,66 +1,94 @@
-package scoremanager.main;
-import java.util.HashMap;
-import java.util.Map;
+//追加修正20260518
 
+package scoremanager.main;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import bean.School;
 import bean.Student;
-import bean.Teacher;
 import dao.StudentDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import tool.Action;
+
 public class StudentCreateExecuteAction extends Action {
+
 	@Override
-	public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-		// ローカル変数の指定 1
-		HttpSession session = req.getSession(); // セッション
-		Teacher teacher = (Teacher)session.getAttribute("user");
-		int ent_year = 0; // 選択された入学年度
-		String student_no = ""; // 入力された学生番号
-		String student_name = ""; // 入力された氏名
-		String class_num = ""; // 選択されたクラス番号
-		Student student = new Student();
-		StudentDao studentDao = new StudentDao();
-		Map<String, String> errors = new HashMap<>(); // エラーメッセージ
-		// リクエストパラメーターの取得 2
-		ent_year = Integer.parseInt(req.getParameter("ent_year"));
-		student_no = req.getParameter("no");
-		student_name = req.getParameter("name");
-		class_num = req.getParameter("class_num");
-		// DBからデータ取得 3
-		// なし
-		// ビジネスロジック 4
-		if (ent_year == 0) { // 入学年度が未選択だった場合
-			errors.put("1", "入学年度を選択してください");
-		} else {
-			if (studentDao.get(student_no) != null) { // 学生番号が重複している場合
-				errors.put("2", "学生番号が重複しています");
-			} else {
-				// studentに学生情報をセット
-				student.setNo(student_no);
-				student.setName(student_name);
-				student.setEntYear(ent_year);
-				student.setClassNum(class_num);
-				student.setAttend(true);
-				student.setSchool(teacher.getSchool());
-				// saveメソッドで情報を登録
-				studentDao.save(student);
-			}
+	public void execute(
+			HttpServletRequest request,
+			HttpServletResponse response
+	) throws Exception {
+
+		// セッションから学校情報取得
+		School school =
+				(School) request.getSession()
+				.getAttribute("school");
+
+		// パラメータ取得
+		String no =
+				request.getParameter("no");
+
+		String name =
+				request.getParameter("name");
+
+		String classNum =
+				request.getParameter("class_num");
+
+		int entYear =
+				Integer.parseInt(
+						request.getParameter("ent_year"));
+
+		// エラーメッセージ
+		List<String> errors =
+				new ArrayList<>();
+
+		// DAO
+		StudentDao dao =
+				new StudentDao();
+
+		// 学生番号重複確認
+		boolean exists =
+				dao.exists(
+						no,
+						school.getCd());
+
+		if (exists) {
+
+			errors.add("学生番号が重複しています");
 		}
-		// JSPへフォワード 7
-		if (errors.isEmpty()) { // エラーメッセージがない場合
-			// レスポンス値をセット 6（正常時のみ）
-			req.setAttribute("ent_year", ent_year);
-			req.setAttribute("no", student_no);
-			req.setAttribute("name", student_name);
-			req.setAttribute("class_num", class_num);
-			// 登録完了画面にフォワード
-			req.getRequestDispatcher("student_create_done.jsp").forward(req, res);
-		} else { // エラーメッセージがある場合
-			// エラーメッセージをセット（入力値はリセット）
-			req.setAttribute("errors", errors);
-			// 登録画面にフォワード（入力値はセットしないためリセットされる）
-			req.getRequestDispatcher("StudentCreate.action").forward(req, res);
+
+		// エラーあり
+		if (!errors.isEmpty()) {
+
+			request.setAttribute(
+					"errors",
+					errors);
+
+			request.getRequestDispatcher(
+					"student_create.jsp")
+					.forward(request, response);
+
+			return;
 		}
+
+		// 学生生成
+		Student student =
+				new Student();
+
+		student.setNo(no);
+		student.setName(name);
+		student.setClassNum(classNum);
+		student.setEntYear(entYear);
+		student.setAttend(true);
+		student.setSchool(school);
+
+		// 保存
+		dao.save(student);
+
+		// 完了画面
+		request.getRequestDispatcher(
+				"student_create_done.jsp")
+				.forward(request, response);
 	}
 }
